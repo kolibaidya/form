@@ -1,44 +1,30 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginSchemaType } from "@/schema/loginSchema";
+import { ErrorMessage } from "@hookform/error-message";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { loginSchema, type LoginSchemaType } from "@/schema/loginSchema";
+import { useLogin } from "@/hooks/userHook";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setError,
+    formState: { errors },
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      root: null,
+    },
   });
+  const { mutateAsync, isPending } = useLogin(setError);
 
   const onSubmit = async (data: LoginSchemaType) => {
-    setServerError(null);
-    try {
-      const res = await fetch("https://fakestoreapi.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: data.username,
-          password: data.password,
-        }),
-      });
-      if (!res.ok) {
-        setServerError("Invalid username or password");
-        return;
-      }
-      const result = await res.json();
-      localStorage.setItem("token", result.token);
-      navigate("/products");
-    } catch (err) {
-      setServerError("Something went wrong. Try again.");
-    }
+    console.log("Data from react-hook-form handleSubmit:", data);
+    await mutateAsync(data);
   };
 
   return (
@@ -49,19 +35,27 @@ export default function LoginPage() {
       <h2 className="text-2xl font-semibold text-center">Login</h2>
 
       <Input type="text" placeholder="Username" {...register("username")} />
-      {errors.username && (
-        <p className="text-red-500">{errors.username.message}</p>
-      )}
+      <ErrorMessage
+        errors={errors}
+        name="username"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
       <Input type="password" placeholder="Password" {...register("password")} />
-      {errors.password && (
-        <p className="text-red-500">{errors.password.message}</p>
-      )}
+      <ErrorMessage
+        errors={errors}
+        name="password"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
-      {serverError && <p className="text-red-600 text-center">{serverError}</p>}
+      <ErrorMessage
+        errors={errors}
+        name="root"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Logging in..." : "Login"}
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Logging in..." : "Login"}
       </Button>
     </form>
   );
