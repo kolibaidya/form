@@ -9,7 +9,7 @@ type product = {
   image: string;
 };
 
-export default function ProductList() {
+export default function ProductFeed() {
   const { data, isLoading, error } = useQuery<product[]>({
     queryKey: ["products"],
     queryFn: async () => {
@@ -24,21 +24,20 @@ export default function ProductList() {
   return (
     <div>
       <h2>Product List</h2>
-      
-        {data?.map((product) => (
-          <div key={product.id}
-          style={{marginBottom: "20px"}}>
-            <img
+
+      {data?.map((product) => (
+        <div key={product.id} style={{ marginBottom: "20px" }}>
+          <img
             src={product.image}
             alt={product.title}
-            style={{width:"150px"}} />
-            <h3>{product.title}</h3>
-            <p>${product.price}</p> 
-            <h4>{product.description}</h4>
-            <h2>{product.category}</h2> 
-          </div>
-        ))}
-     
-   </div>
+            style={{ width: "150px" }}
+          />
+          <h3>{product.title}</h3>
+          <p>${product.price}</p>
+          <h4>{product.description}</h4>
+          <h2>{product.category}</h2>
+        </div>
+      ))}
+    </div>
   );
 }
