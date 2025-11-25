@@ -14,47 +14,39 @@ export default function ProductPage() {
   const queryClient = useQueryClient();
 
   // ⿡ Fetch product list
-  const { data, isLoading, error} =
-  useQuery<Product[]>({
+  const { data, isLoading, error } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: async () => {
-        const res = await
-        fetch("https://fakestoreapi.com/products");
-        return res.json();
+      const res = await fetch("https://fakestoreapi.com/products");
+      return res.json();
     },
   });
 
   // ⿢ Create product
   const createProduct = useMutation({
-    mutationFn: async (newProduct: 
-        Omit<Product, "id">) => {
-      const res = await 
-      fetch("https://fakestoreapi.com/products", 
-        {
+    mutationFn: async (newProduct: Omit<Product, "id">) => {
+      const res = await fetch("https://fakestoreapi.com/products", {
         method: "POST",
-        headers: { "Content-Type": 
-            "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newProduct),
       });
       return res.json();
     },
     onSuccess: () => {
-   queryClient.invalidateQueries( { queryKey:["Products"] }); // refresh list
+      queryClient.invalidateQueries({ queryKey: ["Products"] }); // refresh list
     },
   });
 
   // ⿣ Delete product
   const deleteProduct = useMutation({
     mutationFn: async (id: number) => {
-      const res = await 
-      fetch (`https://fakestoreapi.com/products/${id}`, {
+      const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
         method: "DELETE",
       });
       return res.json();
     },
     onSuccess: () => {
-
-      queryClient.invalidateQueries( { queryKey:["Products"] });
+      queryClient.invalidateQueries({ queryKey: ["Products"] });
     },
   });
 
@@ -64,17 +56,17 @@ export default function ProductPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if(title && price !== "") {
-    createProduct.mutate({
-  title: title,
-  price: Number(price),
-  description: "string",
-  category: "string",
-  image: "https://via.placeholder.com/150"
-});
+    if (title && price !== "") {
+      createProduct.mutate({
+        title: title,
+        price: Number(price),
+        description: "string",
+        category: "string",
+        image: "https://via.placeholder.com/150",
+      });
 
-setTitle("");
-setPrice("");
+      setTitle("");
+      setPrice("");
     }
   };
 
@@ -102,7 +94,10 @@ setPrice("");
           onChange={(e) => setPrice(e.target.value)}
           required
         />
-        <button className="bg-blue-600 text-white px-4 rounded hover:bg-blue-700" type="submit">
+        <button
+          className="bg-blue-600 text-white px-4 rounded hover:bg-blue-700"
+          type="submit"
+        >
           Add Product
         </button>
       </form>
@@ -116,14 +111,15 @@ setPrice("");
             className="border p-4 rounded shadow hover:shadow-lg transition flex flex-col justify-between"
           >
             <div>
-                <img
-            src={product.image}
-            alt={product.title}
-            style={{width:"150px"}} />
+              <img
+                src={product.image}
+                alt={product.title}
+                style={{ width: "150px" }}
+              />
               <h3 className="text-lg font-semibold">{product.title}</h3>
               <p className="text-md font-medium">${product.price}</p>
               <h4>{product.description}</h4>
-              <h2>{product.category}</h2> 
+              <h2>{product.category}</h2>
             </div>
             <button
               onClick={() => deleteProduct.mutate(product.id)}
@@ -134,6 +130,6 @@ setPrice("");
           </div>
         ))}
       </div>
-    </div> 
-);
+    </div>
+  );
 }

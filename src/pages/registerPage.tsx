@@ -1,44 +1,33 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ErrorMessage } from "@hookform/error-message";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   registerSchema,
   type RegisterSchemaType,
 } from "@/schema/registerSchema";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useRegister } from "@/hooks/useRegister";
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setError,
+    formState: { errors },
   } = useForm<RegisterSchemaType>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      root: null,
+    },
   });
+  const { mutateAsync, isPending } = useRegister(setError);
 
   const onSubmit = async (data: RegisterSchemaType) => {
-    setServerError(null);
-    try {
-      const res = await fetch("https://fakestoreapi.com/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-      if (!res.ok) {
-        setServerError(result.message || "Registration failed");
-        return;
-      }
-      navigate("/login");
-    } catch (err: any) {
-      console.error(err);
-      setServerError("Something went wrong. Try again.");
-    }
+    console.log("Data from react-hook-form handleSubmit:", data);
+    await mutateAsync(data);
   };
 
   return (
@@ -49,22 +38,34 @@ export default function RegisterPage() {
       <h2 className="text-2xl font-semibold text-center">Register</h2>
 
       <Input type="email" placeholder="Email" {...register("email")} />
-      {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+      <ErrorMessage
+        errors={errors}
+        name="email"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
       <Input type="text" placeholder="Username" {...register("username")} />
-      {errors.username && (
-        <p className="text-red-500">{errors.username.message}</p>
-      )}
+      <ErrorMessage
+        errors={errors}
+        name="username"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
       <Input type="password" placeholder="Password" {...register("password")} />
-      {errors.password && (
-        <p className="text-red-500">{errors.password.message}</p>
-      )}
+      <ErrorMessage
+        errors={errors}
+        name="password"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
-      {serverError && <p className="text-red-600 text-center">{serverError}</p>}
+      <ErrorMessage
+        errors={errors}
+        name="root"
+        render={({ message }) => <p className="text-red-500">{message}</p>}
+      />
 
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Registering..." : "Register"}
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Registering..." : "Register"}
       </Button>
     </form>
   );
