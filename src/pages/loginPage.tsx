@@ -4,7 +4,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginSchema, type LoginSchemaType } from "@/schema/loginSchema";
-import { useLogin } from "@/hooks/userHook";
+import { useLogin } from "@/hooks/userHooks";
 
 export default function LoginPage() {
   const {
