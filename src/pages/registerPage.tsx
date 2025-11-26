@@ -7,7 +7,7 @@ import {
   registerSchema,
   type RegisterSchemaType,
 } from "@/schema/registerSchema";
-import { useRegister } from "@/hooks/userHook";
+import { useRegister } from "@/hooks/userHooks";
 
 export default function RegisterPage() {
   const {

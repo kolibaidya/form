@@ -1,5 +1,5 @@
 import type { product } from "@/components/types/product";
-import ProductCard from "@/components/productCard";
+import ProductCard from "@/components/card/productCard";
 
 type ProductFeedProps = {
   products: product[];
