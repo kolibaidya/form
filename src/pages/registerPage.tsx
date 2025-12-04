@@ -7,7 +7,7 @@ import {
   registerSchema,
   type RegisterSchemaType,
 } from "@/schema/registerSchema";
-import { useRegister } from "@/hooks/userHook";
+import { useRegister } from "@/hooks/userHooks";
 
 export default function RegisterPage() {
   const {
@@ -26,8 +26,11 @@ export default function RegisterPage() {
   const { mutateAsync, isPending } = useRegister(setError);
 
   const onSubmit = async (data: RegisterSchemaType) => {
-    console.log("Data from react-hook-form handleSubmit:", data);
-    await mutateAsync(data);
+    try {
+      await mutateAsync(data);
+    } catch (err) {
+      console.error("Registration failed:", err);
+    }
   };
 
   return (

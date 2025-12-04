@@ -1,14 +1,9 @@
-import type { product } from "@/components/types/product";
-
-type productCardprops = {
-  product: product;
-};
-
-export default function productCard({ product }: productCardprops) {
+import type { ProductCardProps } from "./types/productCardProps";
+export default function productCard({ product }: ProductCardProps) {
   return (
-    <div key={product.id}>
+    <div>
       <h2>{product.name}</h2>
-      <img src={product.image} alt={product.title} style={{ width: "150px" }} />
+      <h3>{product.title}</h3>
       <p>${product.price}</p>
       <h4>{product.description}</h4>
       <h2>{product.category}</h2>
