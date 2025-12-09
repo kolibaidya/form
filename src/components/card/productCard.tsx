@@ -1,17 +1,28 @@
-import type { product } from "@/components/types/product";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { product } from "../types/product";
 
-type productCardprops = {
+interface productCardProps {
   product: product;
-};
+}
 
-export default function productCard({ product }: productCardprops) {
+export default function ProductCard({ product }: productCardProps) {
   return (
-    <div key={product.id}>
-      <h2>{product.name}</h2>
-      <img src={product.image} alt={product.title} style={{ width: "150px" }} />
-      <p>${product.price}</p>
-      <h4>{product.description}</h4>
-      <h2>{product.category}</h2>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{product.name}</CardTitle>
+        <CardDescription>{product.title}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>price{product.price}</p>
+        <p>{product.description}</p>
+        <p>{product.category}</p>
+      </CardContent>
+    </Card>
   );
 }

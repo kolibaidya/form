@@ -1,3 +1,7 @@
-export default function ErrorDisplay() {
-  return <p>Something went wrong...</p>;
+interface ErrorDisplayProps {
+  error: Error;
+}
+
+export default function ErrorDisplay({ error }: ErrorDisplayProps) {
+  return <div>Something went wrong...{error.message}</div>;
 }

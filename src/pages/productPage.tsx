@@ -1,17 +1,41 @@
+import { DialogDemo } from "@/components/dialogDemo";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import LoadingDisplay from "@/components/LoadingDisplay";
 import ProductFeed from "@/components/feed/productFeed";
-import { useFetchProducts } from "@/hooks/userFetchProducts";
+import LoadingDisplay from "@/components/LoadingDisplay";
+import { DataTableDemo } from "@/components/table/dataTableDemo";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useFetchProducts } from "@/hooks/productPageHooks.";
 
 export default function ProductPage() {
-  const { data: products, isFetching, error } = useFetchProducts();
+  const { isLoading, data: products, error } = useFetchProducts();
 
   return (
     <div>
-      <h1>products page</h1>
-      {isFetching && <LoadingDisplay />}
-      {error && <ErrorDisplay />}
-      {products && <ProductFeed products={products} />}
+      <DialogDemo />
+      <DataTableDemo />
+      {isLoading && <LoadingDisplay />}
+      {error && <ErrorDisplay error={error} />}
+      {products && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Product page</CardTitle>
+            <CardDescription>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod
+              sapiente commodi eum error quibusdam atque saepe soluta laborum
+              adipisci voluptatem?
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <ProductFeed products={products} />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

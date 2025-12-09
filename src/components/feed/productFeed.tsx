@@ -1,15 +1,15 @@
-import type { product } from "@/components/types/product";
-import ProductCard from "@/components/card/productCard";
+import ProductCard from "../card/productCard";
+import { type product } from "../types/product";
 
-type ProductFeedProps = {
+interface ProductFeedProps {
   products: product[];
-};
+}
 
 export default function ProductFeed({ products }: ProductFeedProps) {
   return (
-    <div className="flex gap-4">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+    <div>
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
       ))}
     </div>
   );
