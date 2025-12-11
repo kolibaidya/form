@@ -2,7 +2,6 @@ import { DialogDemo } from "@/components/dialogDemo";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import ProductFeed from "@/components/feed/productFeed";
 import LoadingDisplay from "@/components/LoadingDisplay";
-import { DataTableDemo } from "@/components/table/dataTableDemo";
 import {
   Card,
   CardContent,
@@ -18,7 +17,6 @@ export default function ProductPage() {
   return (
     <div>
       <DialogDemo />
-      <DataTableDemo />
       {isLoading && <LoadingDisplay />}
       {error && <ErrorDisplay error={error} />}
       {products && (

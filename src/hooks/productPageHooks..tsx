@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { product } from "@/components/types/product";
+import type { product } from "@/models/product";
 import { useQuery } from "@tanstack/react-query";
 
 const baseProductUrl = "https://fakestoreapi.com/products";

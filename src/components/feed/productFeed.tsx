@@ -1,5 +1,5 @@
 import ProductCard from "../card/productCard";
-import { type product } from "../types/product";
+import { type product } from "../../models/product";
 
 interface ProductFeedProps {
   products: product[];
