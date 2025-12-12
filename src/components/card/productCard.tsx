@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { product } from "../models/product";
+import type { product } from "../../models/product";
 
 interface productCardProps {
   product: product;

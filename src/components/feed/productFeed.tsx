@@ -1,4 +1,4 @@
-import type { product } from "../models/product";
+import { type product } from "../../models/product";
 import { ProductTable } from "../table/productTable";
 
 interface ProductFeedProps {
