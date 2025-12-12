@@ -1,16 +1,10 @@
-import ProductCard from "../card/productCard";
-import { type product } from "../types/product";
+import type { product } from "../models/product";
+import { ProductTable } from "../table/productTable";
 
 interface ProductFeedProps {
   products: product[];
 }
 
-export default function ProductFeed({ products }: ProductFeedProps) {
-  return (
-    <div>
-      {products.map((p) => (
-        <ProductCard key={p.id} product={p} />
-      ))}
-    </div>
-  );
-}
+export const ProductFeed = ({ products }: ProductFeedProps) => {
+  return <ProductTable product={products} />;
+};

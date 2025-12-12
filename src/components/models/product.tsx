@@ -3,6 +3,7 @@ export interface product {
   name: string;
   title: string;
   price: number;
-  description: string;
   category: string;
+  description: string;
+  root: string | null;
 }

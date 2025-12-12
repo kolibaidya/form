@@ -1,8 +1,6 @@
-import { DialogDemo } from "@/components/dialogDemo";
+import { useFetchProducts } from "@/hooks/productHooks";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import ProductFeed from "@/components/feed/productFeed";
 import LoadingDisplay from "@/components/LoadingDisplay";
-import { DataTableDemo } from "@/components/table/dataTableDemo";
 import {
   Card,
   CardContent,
@@ -10,19 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useFetchProducts } from "@/hooks/productPageHooks.";
+import { ProductFeed } from "@/components/feed/productFeed";
 
-export default function ProductPage() {
+export const ProductPage = () => {
   const { isLoading, data: products, error } = useFetchProducts();
 
   return (
     <div>
-      <DialogDemo />
-      <DataTableDemo />
       {isLoading && <LoadingDisplay />}
       {error && <ErrorDisplay error={error} />}
       {products && (
-        <Card>
+        <Card className="xl">
           <CardHeader>
             <CardTitle>Product page</CardTitle>
             <CardDescription>
@@ -38,4 +34,4 @@ export default function ProductPage() {
       )}
     </div>
   );
-}
+};

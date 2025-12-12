@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/loginPage";
 import RegisterPage from "./pages/registerPage";
-import ProductPage from "./pages/productPage";
+import { ProductPage } from "./pages/productPage";
 
 export default function App() {
   return (
