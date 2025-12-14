@@ -27,16 +27,20 @@ export const CreateProductDialog = () => {
   } = useForm<ProductSchemaType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
-      name: "",
       title: "",
-      price: 0,
+      price: 0.01,
       category: "",
-      description: "",
-      root: null,
     },
   });
 
   const { mutateAsync, isPending } = useCreateProducts(setError, setOpen);
+  const onSubmit = async (data: ProductSchemaType) => {
+    try {
+      await mutateAsync(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -49,23 +53,7 @@ export const CreateProductDialog = () => {
         <DialogHeader>
           <DialogTitle>Create New Product</DialogTitle>
         </DialogHeader>
-        <form
-          onSubmit={handleSubmit(async (data) => {
-            console.log("Data from react-hook-form handleSubmit:", data);
-            await mutateAsync(data);
-          })}
-        >
-          <Input
-            type="text"
-            placeholder="Name"
-            {...register("name")}
-            className="m-2"
-          />
-          <ErrorMessage
-            errors={errors}
-            name="name"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
-          />
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             type="text"
             placeholder="Title"
@@ -78,9 +66,10 @@ export const CreateProductDialog = () => {
             render={({ message }) => <p className="text-red-500">{message}</p>}
           />
           <Input
-            type="text"
+            type="number"
+            step="any"
             placeholder="Price"
-            {...register("price")}
+            {...register("price", { valueAsNumber: true })}
             className="m-2"
           />
           <ErrorMessage
@@ -99,17 +88,7 @@ export const CreateProductDialog = () => {
             name="category"
             render={({ message }) => <p className="text-red-500">{message}</p>}
           />
-          <Input
-            type="text"
-            placeholder="Description"
-            {...register("description")}
-            className="m-2"
-          />
-          <ErrorMessage
-            errors={errors}
-            name="description"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
-          />
+
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>

@@ -20,26 +20,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import type { product } from "../models/product";
 import { productTableColumnDefinitions } from "./productTableColumnDefinitions";
 import { CreateProductDialog } from "../dialogs/createProductDialog";
 import { useDialog } from "react-dialog-async";
 import { DeleteProductDialog } from "../dialogs/deleteProductDialog";
 import { EditProductDialog } from "../dialogs/editProductDialog";
+import type { Product } from "@/models/product";
 
 interface ProductTableProps {
-  product: product[];
+  products: Product[];
 }
 
-export const ProductTable = ({ product }: ProductTableProps) => {
+export const ProductTable = ({ products }: ProductTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const editProductDialog = useDialog(EditProductDialog);
   const deleteProductDialog = useDialog(DeleteProductDialog);
 
-  const table = useReactTable({
-    data: product,
+  const table = useReactTable<Product>({
+    data: products ?? [],
     columns: productTableColumnDefinitions(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -57,12 +57,12 @@ export const ProductTable = ({ product }: ProductTableProps) => {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-4">
         <Input
-          placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter titles..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -92,7 +92,7 @@ export const ProductTable = ({ product }: ProductTableProps) => {
             {!table.getRowModel().rows?.length && (
               <TableRow>
                 <TableCell
-                  colSpan={productTableColumnDefinitions.length}
+                  colSpan={productTableColumnDefinitions().length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -117,12 +117,9 @@ export const ProductTable = ({ product }: ProductTableProps) => {
                         id: row.original.id,
                         product: {
                           id: row.original.id,
-                          name: row.original.name,
                           title: row.original.title,
                           price: row.original.price,
                           category: row.original.category,
-                          description: row.original.description,
-                          root: row.original.root,
                         },
                       });
                     }}

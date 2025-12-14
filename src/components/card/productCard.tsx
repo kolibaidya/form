@@ -5,21 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { product } from "../../models/product";
+import type { Product } from "@/models/product";
 
 interface productCardProps {
-  product: product;
+  product: Product;
 }
 
 export default function ProductCard({ product }: productCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{product.name}</CardTitle>
-        <CardDescription>{product.title}</CardDescription>
+        <CardTitle>{product.title}</CardTitle>
+        <CardDescription>price{product.price}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>price{product.price}</p>
         <p>{product.category}</p>
       </CardContent>
     </Card>

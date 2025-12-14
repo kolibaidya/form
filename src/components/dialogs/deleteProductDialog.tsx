@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { useDeleteProduct } from "@/hooks/productHooks";
 
 interface DeleteProductDialogProps {
-  id: string;
+  id: number;
 }
 
 export const DeleteProductDialog = ({

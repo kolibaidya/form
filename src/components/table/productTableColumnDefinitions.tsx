@@ -3,26 +3,20 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 export const productTableColumnDefinitions = (): ColumnDef<product>[] => [
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
     accessorKey: "title",
     header: "Title",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("title")}</div>
+    ),
   },
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ row }) => `$${row.getValue("price")}`,
+    cell: ({ row }) => <span>${row.original.price}</span>,
   },
   {
     accessorKey: "category",
     header: "Category",
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => <div>{row.getValue("description")}</div>,
+    cell: ({ row }) => <div>{row.original.category}</div>,
   },
 ];

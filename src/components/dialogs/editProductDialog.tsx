@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,10 +15,11 @@ import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AsyncDialogProps } from "react-dialog-async";
 import { useForm } from "react-hook-form";
+import type { product } from "../models/product";
 
-interface EditProductDialogProps {
-  id: string;
-  product: ProductSchemaType;
+export interface EditProductDialogProps {
+  id: number;
+  product: product;
 }
 
 export function EditProductDialog({
@@ -33,12 +35,9 @@ export function EditProductDialog({
   } = useForm<ProductSchemaType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
-      name: editProductDialogData.product.name,
       title: editProductDialogData.product.title,
-      price: editProductDialogData.product.price,
+      price: Number(editProductDialogData.product.price),
       category: editProductDialogData.product.category,
-      description: editProductDialogData.product.description,
-      root: null,
     },
   });
 
@@ -49,9 +48,12 @@ export function EditProductDialog({
       open={isOpen}
       onOpenChange={(isOpen) => !isOpen && handleClose(false)}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Product</DialogTitle>
+          <DialogDescription>
+            Update the product inforation and save changes
+          </DialogDescription>
         </DialogHeader>
         <form
           onSubmit={handleSubmit(async (data) => {
@@ -59,17 +61,6 @@ export function EditProductDialog({
             await mutateAsync({ id: editProductDialogData.id, data });
           })}
         >
-          <Input
-            type="text"
-            placeholder="Name"
-            {...register("name")}
-            className="m-2"
-          />
-          <ErrorMessage
-            errors={errors}
-            name="name"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
-          />
           <Input
             type="text"
             placeholder="Title"
@@ -82,9 +73,10 @@ export function EditProductDialog({
             render={({ message }) => <p className="text-red-500">{message}</p>}
           />
           <Input
-            type="text"
+            type="number"
+            step="0.01"
             placeholder="Price"
-            {...register("price")}
+            {...register("price", { valueAsNumber: true })}
             className="m-2"
           />
           <ErrorMessage
@@ -101,17 +93,6 @@ export function EditProductDialog({
           <ErrorMessage
             errors={errors}
             name="category"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
-          />
-          <Input
-            type="text"
-            placeholder="Description"
-            {...register("description")}
-            className="m-2"
-          />
-          <ErrorMessage
-            errors={errors}
-            name="description"
             render={({ message }) => <p className="text-red-500">{message}</p>}
           />
           <DialogFooter>
