@@ -40,8 +40,6 @@ export const useCreatePhones = (
       if (!res.ok) {
         throw new Error("Invalid username or password");
       }
-      const result = await res.json();
-      localStorage.setItem("token", result.token);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["phones"] });
