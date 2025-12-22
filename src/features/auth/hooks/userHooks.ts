@@ -19,8 +19,6 @@ export const useLogin = (setError: UseFormSetError<LoginSchemaType>) => {
       if (!res.ok) {
         throw new Error("Invalid username or password");
       }
-      const result = await res.json();
-      localStorage.setItem("token", result.token);
     },
     onSuccess: () => {
       navigate("/products");
@@ -46,8 +44,6 @@ export const useRegister = (setError: UseFormSetError<RegisterSchemaType>) => {
       if (!res.ok) {
         throw new Error("Invalid username or password");
       }
-      const result = await res.json();
-      localStorage.setItem("token", result.token);
     },
     onSuccess: () => {
       navigate("/login");
