@@ -1,11 +1,11 @@
-import type { Product } from "@/models/product";
-import type { ProductSchemaType } from "@/schema/productSchema";
+import type { ProductSchemaType } from "@/features/products/schema/productSchema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { UseFormSetError } from "react-hook-form";
+import type { product } from "../models/product";
 
 const baseUrl = "https://fakestoreapi.com/products";
+
 export const useFetchProducts = () => {
-  return useQuery<Product[]>({
+  return useQuery<product[]>({
     queryKey: ["products"],
     queryFn: async () => {
       const res = await fetch(baseUrl);
@@ -17,16 +17,27 @@ export const useFetchProducts = () => {
   });
 };
 
+//  fetch single product
+export const useFetchProduct = (id: number) =>
+  useQuery<product>({
+    queryKey: ["products", id],
+    queryFn: async () => {
+      const res = await fetch(`${baseUrl}/${id}`);
+
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
+    },
+    enabled: Number.isFinite(id),
+  });
+
 interface useEditProductProps {
   id: number;
   data: ProductSchemaType;
 }
 
-export const useCreateProducts = (
-  setError: UseFormSetError<ProductSchemaType>,
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const useCreateProducts = () => {
   const QueryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (data: ProductSchemaType) => {
       const res = await fetch(baseUrl, {
@@ -39,25 +50,15 @@ export const useCreateProducts = (
       }
       return res.json();
     },
-    onSuccess: (newProduct: Product) => {
-      QueryClient.setQueriesData<Product[]>({ queryKey: ["products"] }, (old) =>
-        old ? [...old, newProduct] : [newProduct]
-      );
-      setOpen(false);
-    },
-
-    onError: (error) => {
-      setError("root", {
-        type: "server",
-        message: (error as Error).message,
+    onSuccess: () => {
+      QueryClient.invalidateQueries({
+        queryKey: ["products"],
       });
     },
   });
 };
 
-export const useEditProduct = (
-  setError: UseFormSetError<ProductSchemaType>
-) => {
+export const useEditProduct = () => {
   const QueryClient = useQueryClient();
 
   return useMutation({
@@ -66,22 +67,20 @@ export const useEditProduct = (
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          Title: data.title,
-          Price: data.price,
-          Category: data.category,
+          title: data.title,
+          price: data.price,
+          category: data.category,
         }),
       });
       if (!res.ok) {
         throw new Error("Failed to edit product");
       }
+      return res.json();
     },
-    onSuccess: (_, { id, data }) => {
-      QueryClient.setQueriesData<Product[]>({ queryKey: ["products"] }, (old) =>
-        old?.map((p) => (p.id === id ? { ...p, ...data } : p))
-      );
-    },
-    onError: (error) => {
-      setError("root", { type: "server", message: (error as Error).message });
+    onSuccess: () => {
+      QueryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
     },
   });
 };
@@ -98,10 +97,10 @@ export const useDeleteProduct = () => {
         throw new Error("Failed to delete product");
       }
     },
-    onSuccess: (_, id) => {
-      QueryClient.setQueriesData<Product[]>({ queryKey: ["products"] }, (old) =>
-        old?.filter((p) => p.id !== id)
-      );
+    onSuccess: () => {
+      QueryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
     },
   });
 };

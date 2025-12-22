@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import {
   registerSchema,
   type RegisterSchemaType,
-} from "@/schema/registerSchema";
-import { useRegister } from "@/hooks/userHooks";
+} from "@/features/auth/schema/registerSchema";
+import { useRegister } from "@/features/auth/hooks/userHooks";
 
 export default function RegisterPage() {
   const {

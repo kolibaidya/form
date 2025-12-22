@@ -1,6 +1,6 @@
 import { useFetchPhones } from "@/hooks/phoneHooks";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import LoadingDisplay from "@/components/LoadingDisplay";
+
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PhoneFeed } from "@/components/feed/phoneFeed";
+import { LoadingDisplay } from "@/components/LoadingDisplay";
 
 export const PhonePage = () => {
   const { isLoading, data: phones, error } = useFetchPhones();

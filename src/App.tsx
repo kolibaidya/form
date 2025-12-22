@@ -4,9 +4,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import LoginPage from "./pages/loginPage";
-import RegisterPage from "./pages/registerPage";
-import { ProductPage } from "./pages/productPage";
+import LoginPage from "./features/auth/pages/loginPage";
+import RegisterPage from "./features/auth/pages/registerPage";
+import { ProductPage } from "./features/products/pages/productPage";
 import { PhonePage } from "./pages/phonePage";
 
 export default function App() {

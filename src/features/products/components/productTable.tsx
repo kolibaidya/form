@@ -21,14 +21,14 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { productTableColumnDefinitions } from "./productTableColumnDefinitions";
-import { CreateProductDialog } from "../dialogs/createProductDialog";
+import { CreateProductDialog } from "@/features/products/components/createProductDialog";
 import { useDialog } from "react-dialog-async";
-import { DeleteProductDialog } from "../dialogs/deleteProductDialog";
-import { EditProductDialog } from "../dialogs/editProductDialog";
-import type { Product } from "@/models/product";
+import { DeleteProductDialog } from "@/features/products/components/deleteProductDialog";
+import { EditProductDialog } from "@/features/products/components/editProductDialog";
+import type { product } from "../models/product";
 
 interface ProductTableProps {
-  products: Product[];
+  products: product[];
 }
 
 export const ProductTable = ({ products }: ProductTableProps) => {
@@ -38,7 +38,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
   const editProductDialog = useDialog(EditProductDialog);
   const deleteProductDialog = useDialog(DeleteProductDialog);
 
-  const table = useReactTable<Product>({
+  const table = useReactTable<product>({
     data: products ?? [],
     columns: productTableColumnDefinitions(),
     onSortingChange: setSorting,

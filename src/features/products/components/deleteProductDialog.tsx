@@ -5,9 +5,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { useDeleteProduct } from "@/hooks/productHooks";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useDeleteProduct } from "@/features/products/hooks/productHooks";
 
 interface DeleteProductDialogProps {
   id: number;

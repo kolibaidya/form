@@ -3,22 +3,33 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useCreateProducts } from "@/hooks/productHooks";
-import { ProductSchema, type ProductSchemaType } from "@/schema/productSchema";
+import { useEditProduct } from "@/features/products/hooks/productHooks";
+import {
+  ProductSchema,
+  type ProductSchemaType,
+} from "@/features/products/schema/productSchema";
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Brain } from "lucide-react";
+import type { AsyncDialogProps } from "react-dialog-async";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import type { product } from "../models/product";
 
-export const CreateProductDialog = () => {
-  const [open, setOpen] = useState(false);
+export interface EditProductDialogProps {
+  id: number;
+  product: product;
+}
+
+export function EditProductDialog({
+  isOpen,
+  handleClose,
+  data,
+}: AsyncDialogProps<EditProductDialogProps, boolean>) {
   const {
     register,
     handleSubmit,
@@ -27,31 +38,39 @@ export const CreateProductDialog = () => {
   } = useForm<ProductSchemaType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
-      title: "",
-      price: 0.01,
-      category: "",
+      title: data.product.title,
+      price: Number(data.product.price),
+      category: data.product.category,
     },
   });
 
-  const { mutateAsync, isPending } = useCreateProducts(setError, setOpen);
-  const onSubmit = async (data: ProductSchemaType) => {
-    try {
-      await mutateAsync(data);
-    } catch (error) {
-      console.error(error);
-    }
+  const { mutate, isPending } = useEditProduct();
+
+  const onSubmit = (FormData: ProductSchemaType) => {
+    mutate(
+      { id: data.id, data: FormData },
+      {
+        onSuccess: () => {
+          handleClose(true);
+        },
+        onError: (error) => {
+          setError("root", {
+            type: "server",
+            message: (error as Error).message,
+          });
+        },
+      }
+    );
   };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          Create a new Product
-          <Brain />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={(Open) => !Open && handleClose(false)}>
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Product</DialogTitle>
+          <DialogTitle>Edit Product</DialogTitle>
+          <DialogDescription>
+            Update the product inforation and save changes
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
@@ -67,7 +86,7 @@ export const CreateProductDialog = () => {
           />
           <Input
             type="number"
-            step="any"
+            step="0.00"
             placeholder="Price"
             {...register("price", { valueAsNumber: true })}
             className="m-2"
@@ -88,17 +107,18 @@ export const CreateProductDialog = () => {
             name="category"
             render={({ message }) => <p className="text-red-500">{message}</p>}
           />
-
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
             </DialogClose>
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : " Submit"}
+              {isPending ? "Editing..." : " Submit"}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   );
-};
+}

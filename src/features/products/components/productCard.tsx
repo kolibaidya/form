@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Product } from "@/models/product";
+import type { product } from "../models/product";
 
 interface productCardProps {
-  product: Product;
+  product: product;
 }
 
 export default function ProductCard({ product }: productCardProps) {
