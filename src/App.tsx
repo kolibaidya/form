@@ -8,6 +8,8 @@ import LoginPage from "./pages/loginPage";
 import RegisterPage from "./pages/registerPage";
 import { ProductPage } from "./pages/productPage";
 import { PhonePage } from "./pages/phonePage";
+import DashboardLayout from "./layouts/dashboardLayout";
+import MainLayout from "./layouts/mainLayout";
 
 export default function App() {
   return (
@@ -16,8 +18,27 @@ export default function App() {
         <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/products" element={<ProductPage />} />
-        <Route path="/phones" element={<PhonePage />} />
+
+        <Route
+          path="/products"
+          element={
+            <MainLayout>
+              <DashboardLayout>
+                <ProductPage />
+              </DashboardLayout>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/phones"
+          element={
+            <MainLayout>
+              <DashboardLayout>
+                <PhonePage />
+              </DashboardLayout>
+            </MainLayout>
+          }
+        />
       </Routes>
     </Router>
   );
