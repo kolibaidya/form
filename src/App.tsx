@@ -1,45 +1,14 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import LoginPage from "./pages/loginPage";
-import RegisterPage from "./pages/registerPage";
-import { ProductPage } from "./pages/productPage";
-import { PhonePage } from "./pages/phonePage";
-import DashboardLayout from "./layouts/dashboardLayout";
-import MainLayout from "./layouts/mainLayout";
+import { BrowserRouter, Routes } from "react-router-dom";
+import AuthRoutes from "./routes/authRoutes";
+import DashboardRoutes from "./routes/dashboardRoutes";
 
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/register" />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-
-        <Route
-          path="/products"
-          element={
-            <MainLayout>
-              <DashboardLayout>
-                <ProductPage />
-              </DashboardLayout>
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/phones"
-          element={
-            <MainLayout>
-              <DashboardLayout>
-                <PhonePage />
-              </DashboardLayout>
-            </MainLayout>
-          }
-        />
+        <AuthRoutes />
+        <DashboardRoutes />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }

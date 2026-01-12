@@ -37,8 +37,14 @@ export function AppSidebar() {
 
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === "/products"}>
-                <Link to="/products" className="flex items-center gap-2">
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith("/dashboard/products")}
+              >
+                <Link
+                  to="/dashboard/products"
+                  className="flex items-center gap-2"
+                >
                   <ShoppingBasket />
                   Products
                 </Link>
@@ -46,8 +52,14 @@ export function AppSidebar() {
             </SidebarMenuItem>
 
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === "/phones"}>
-                <Link to="/phones" className="flex items-center gap-2">
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith("/dashboard/phones")}
+              >
+                <Link
+                  to="/dashboard/phones"
+                  className="flex items-center gap-2"
+                >
                   <Smartphone />
                   Phones
                 </Link>

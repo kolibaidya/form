@@ -1,12 +1,14 @@
-import Footer from "@/components/footer";
 import Header from "@/components/header";
-import type { ReactNode } from "react";
+import Footer from "@/components/footer";
+import { Outlet } from "react-router-dom";
 
-export default function MainLayout({ children }: { children: ReactNode }) {
+export default function MainLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <Header />
-      <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1 p-6">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
