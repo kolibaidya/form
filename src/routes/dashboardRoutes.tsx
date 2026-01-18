@@ -1,7 +1,7 @@
 import DashboardLayout from "@/layouts/dashboardLayout";
 import { PhonePage } from "@/pages/phonePage";
 import { ProductPage } from "@/pages/productPage";
-import { Navigate, Route } from "react-router-dom";
+import { Navigate, Route } from "react-router";
 
 export default function DashboardRoutes() {
   return (

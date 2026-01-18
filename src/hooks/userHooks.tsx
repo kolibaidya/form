@@ -2,7 +2,7 @@ import type { LoginSchemaType } from "@/schema/loginSchema";
 import type { RegisterSchemaType } from "@/schema/registerSchema";
 import { useMutation } from "@tanstack/react-query";
 import type { UseFormSetError } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 export const useLogin = (setError: UseFormSetError<LoginSchemaType>) => {
   const navigate = useNavigate();
