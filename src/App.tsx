@@ -5,6 +5,7 @@ import LoginPage from "@/pages/loginPage";
 import RegisterPage from "@/pages/registerPage";
 import { ProductPage } from "@/pages/productPage";
 import { PhonePage } from "@/pages/phonePage";
+import ProtectedRoute from "./routes/protectedRoute";
 
 export default function App() {
   return (
@@ -15,10 +16,12 @@ export default function App() {
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
-        <Route path="dashboard" element={<DashboardLayout />}>
-          <Route index element={<Navigate to="products" replace />} />
-          <Route path="products" element={<ProductPage />} />
-          <Route path="phones" element={<PhonePage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="dashboard" element={<DashboardLayout />}>
+            <Route index element={<Navigate to="products" replace />} />
+            <Route path="products" element={<ProductPage />} />
+            <Route path="phones" element={<PhonePage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

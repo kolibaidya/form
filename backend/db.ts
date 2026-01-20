@@ -40,9 +40,14 @@ export interface UpdateUserInput {
 export const createUser = (input: CreateUserInput): Omit<User, "password"> => {
   const hashedPassword = bcrypt.hashSync(input.password, 10);
   const stmt = db.prepare(
-    "INSERT INTO users (forename, surname, username, password) VALUES (?, ?, ?, ?)"
+    "INSERT INTO users (forename, surname, username, password) VALUES (?, ?, ?, ?)",
   );
-  const result = stmt.run(input.forename, input.surname, input.username, hashedPassword);
+  const result = stmt.run(
+    input.forename,
+    input.surname,
+    input.username,
+    hashedPassword,
+  );
   return getUserById(result.lastInsertRowid as number)!;
 };
 
@@ -52,7 +57,9 @@ export const getAllUsers = (): Omit<User, "password">[] => {
 };
 
 export const getUserById = (id: number): Omit<User, "password"> | undefined => {
-  const stmt = db.prepare("SELECT id, forename, surname, username FROM users WHERE id = ?");
+  const stmt = db.prepare(
+    "SELECT id, forename, surname, username FROM users WHERE id = ?",
+  );
   return stmt.get(id) as Omit<User, "password"> | undefined;
 };
 
@@ -61,7 +68,10 @@ export const getUserByUsername = (username: string): User | undefined => {
   return stmt.get(username) as User | undefined;
 };
 
-export const updateUser = (id: number, input: UpdateUserInput): Omit<User, "password"> | undefined => {
+export const updateUser = (
+  id: number,
+  input: UpdateUserInput,
+): Omit<User, "password"> | undefined => {
   const fields: string[] = [];
   const values: (string | number)[] = [];
 
@@ -94,4 +104,11 @@ export const deleteUser = (id: number): boolean => {
   const stmt = db.prepare("DELETE FROM users WHERE id = ?");
   const result = stmt.run(id);
   return result.changes > 0;
+};
+
+export const verifyPassword = (
+  plainPassword: string,
+  hashedPassword: string,
+): boolean => {
+  return bcrypt.compareSync(plainPassword, hashedPassword);
 };

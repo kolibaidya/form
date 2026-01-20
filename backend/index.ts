@@ -1,25 +1,46 @@
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, type CreateUserInput, type UpdateUserInput } from "./db";
+declare const Bun: any;
+import {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  type CreateUserInput,
+  type UpdateUserInput,
+  verifyPassword,
+  getUserByUsername,
+} from "./db";
 
 const server = Bun.serve({
   port: 3000,
   routes: {
     "/api/health": {
-      GET: () => Response.json({ status: "ok", timestamp: new Date().toISOString() }),
+      GET: () =>
+        Response.json({ status: "ok", timestamp: new Date().toISOString() }),
     },
     "/api/users": {
-      GET: () => {
+      GET: (_req: Request) => {
         const users = getAllUsers();
         return Response.json({ success: true, data: users });
       },
-      POST: async (req) => {
+      POST: async (req: Request) => {
         try {
-          const body = await req.json() as { forename?: string; surname?: string; username?: string; password?: string };
+          const body = (await req.json()) as {
+            forename?: string;
+            surname?: string;
+            username?: string;
+            password?: string;
+          };
           const { forename, surname, username, password } = body;
 
           if (!forename || !surname || !username || !password) {
             return Response.json(
-              { success: false, error: "Missing required fields: forename, surname, username, password" },
-              { status: 400 }
+              {
+                success: false,
+                error:
+                  "Missing required fields: forename, surname, username, password",
+              },
+              { status: 400 },
             );
           }
 
@@ -29,26 +50,37 @@ const server = Bun.serve({
           if (error.message?.includes("UNIQUE constraint failed")) {
             return Response.json(
               { success: false, error: "Username already exists" },
-              { status: 409 }
+              { status: 409 },
             );
           }
-          return Response.json({ success: false, error: error.message }, { status: 500 });
+          return Response.json(
+            { success: false, error: error.message },
+            { status: 500 },
+          );
         }
       },
     },
     "/api/users/:id": {
-      GET: (req) => {
+      GET: (req: Request & { params: { id: string } }) => {
         const id = Number(req.params.id);
         const user = getUserById(id);
         if (!user) {
-          return Response.json({ success: false, error: "User not found" }, { status: 404 });
+          return Response.json(
+            { success: false, error: "User not found" },
+            { status: 404 },
+          );
         }
         return Response.json({ success: true, data: user });
       },
-      PUT: async (req) => {
+      PUT: async (req: Request & { params: { id: string } }) => {
         const id = Number(req.params.id);
         try {
-          const body = await req.json() as { forename?: string; surname?: string; username?: string; password?: string };
+          const body = (await req.json()) as {
+            forename?: string;
+            surname?: string;
+            username?: string;
+            password?: string;
+          };
           const updateData: UpdateUserInput = {};
 
           if (body.forename !== undefined) updateData.forename = body.forename;
@@ -58,30 +90,75 @@ const server = Bun.serve({
 
           const user = updateUser(id, updateData);
           if (!user) {
-            return Response.json({ success: false, error: "User not found" }, { status: 404 });
+            return Response.json(
+              { success: false, error: "User not found" },
+              { status: 404 },
+            );
           }
           return Response.json({ success: true, data: user });
         } catch (error: any) {
           if (error.message?.includes("UNIQUE constraint failed")) {
             return Response.json(
               { success: false, error: "Username already exists" },
-              { status: 409 }
+              { status: 409 },
             );
           }
-          return Response.json({ success: false, error: error.message }, { status: 500 });
+          return Response.json(
+            { success: false, error: error.message },
+            { status: 500 },
+          );
         }
       },
-      DELETE: (req) => {
+      DELETE: (req: Request & { params: { id: string } }) => {
         const id = Number(req.params.id);
         const deleted = deleteUser(id);
         if (!deleted) {
-          return Response.json({ success: false, error: "User not found" }, { status: 404 });
+          return Response.json(
+            { success: false, error: "User not found" },
+            { status: 404 },
+          );
         }
         return Response.json({ success: true, message: "User deleted" });
       },
     },
+    "/api/auth/login": {
+      POST: async (req: Request) => {
+        const body = (await req.json()) as {
+          username?: string;
+          password?: string;
+        };
+        const { username, password } = body;
+
+        if (!username || !password) {
+          return Response.json(
+            { success: false, error: "Username and password required" },
+            { status: 400 },
+          );
+        }
+        const user = getUserByUsername(username);
+        if (!user) {
+          return Response.json(
+            { success: false, error: "Invalid username or password" },
+            { status: 401 },
+          );
+        }
+        const isValid = verifyPassword(password, user.password);
+        if (!isValid) {
+          return Response.json(
+            { success: false, error: "Invalid username or password" },
+            { status: 401 },
+          );
+        }
+        return Response.json({
+          id: user.id,
+          username: user.username,
+          forename: user.forename,
+          surname: user.surname,
+        });
+      },
+    },
   },
-  fetch(req) {
+  fetch(req: Request) {
     if (req.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
