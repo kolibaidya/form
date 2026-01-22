@@ -76,14 +76,19 @@ Users should only access `/dashboard/*` if logged in.
 
 ## Task Summary
 
-1. [ ] Fix sidebar not displaying
-2. [ ] Rename sidebar file to sidebar.tsx
-3. [ ] Install Zustand
-4. [ ] Create authStore.ts
-5. [ ] Export auth helpers from backend/db.ts
-6. [ ] Add login endpoint to backend/index.ts
-7. [ ] Update useLogin to use Zustand + your backend
-8. [ ] Protect dashboard routes
+1. [x] Fix sidebar not displaying
+2. [x] Rename sidebar file to sidebar.tsx
+3. [x] Install Zustand
+4. [x] Create authStore.ts
+5. [x] Export auth helpers from backend/db.ts
+6. [x] Add login endpoint to backend/index.ts
+7. [x] Update useLogin to use Zustand + your backend
+8. [x] Protect dashboard routes
+
+## Post Tasks
+
+1. [] Fix Login Bug
+2. [] Allow the Sidebar to be available on all pages so users can navigate
 
 ---
 
