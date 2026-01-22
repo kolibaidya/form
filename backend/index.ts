@@ -157,6 +157,45 @@ const server = Bun.serve({
         });
       },
     },
+    "/api/auth/register": {
+      POST: async (req: Request) => {
+        const body = (await req.json()) as {
+          username?: string;
+          password?: string;
+          email?: string;
+        };
+        const { username, password, email } = body;
+
+        if (!username || !password) {
+          return Response.json(
+            { success: false, error: "Username and password required" },
+            { status: 400 },
+          );
+        }
+
+        const existingUser = getUserByUsername(username);
+        if (existingUser) {
+          return Response.json(
+            { success: false, error: "Username already exists" },
+            { status: 409 },
+          );
+        }
+
+        const newUser = createUser({
+          forename: username,
+          surname: username,
+          username,
+          password,
+        });
+
+        return Response.json({
+          id: newUser.id,
+          username: newUser.username,
+          forename: newUser.forename,
+          surname: newUser.surname,
+        });
+      },
+    },
   },
   fetch(req: Request) {
     if (req.method === "OPTIONS") {
