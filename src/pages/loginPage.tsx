@@ -5,8 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginSchema, type LoginSchemaType } from "@/schema/loginSchema";
 import { useLogin } from "@/hooks/userHooks";
+import { useAuthStore } from "@/stores/authStore";
+import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard/products" replace />;
+  }
+
   const {
     register,
     handleSubmit,
@@ -23,7 +31,6 @@ export default function LoginPage() {
   const { mutateAsync, isPending } = useLogin(setError);
 
   const onSubmit = async (data: LoginSchemaType) => {
-    console.log("Data from react-hook-form handleSubmit:", data);
     await mutateAsync(data);
   };
 
@@ -35,6 +42,7 @@ export default function LoginPage() {
       <h2 className="text-2xl font-semibold text-center">Login</h2>
 
       <Input type="text" placeholder="Username" {...register("username")} />
+
       <ErrorMessage
         errors={errors}
         name="username"

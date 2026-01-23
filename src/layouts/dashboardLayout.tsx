@@ -1,15 +1,18 @@
-import { AppSidebar } from "@/components/sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import DashboardSidebar from "@/components/dashboardSidebar";
 import { Outlet } from "react-router-dom";
 
 export default function DashboardLayout() {
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className="min-h-screen  bg-gray-50 text-gray-900">
-        <main className="p-6">
-          <Outlet />
-        </main>
+      <DashboardSidebar />
+      <SidebarInset className="bg-gray-50 text-gray-900">
+        <SidebarTrigger />
+        <Outlet />
       </SidebarInset>
     </SidebarProvider>
   );

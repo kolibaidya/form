@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-export function AppSidebar() {
+export default function DashboardSidebar() {
   const { pathname } = useLocation();
 
   return (

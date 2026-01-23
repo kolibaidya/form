@@ -26,11 +26,11 @@ export const useLogin = (setError: UseFormSetError<LoginSchemaType>) => {
       return res.json();
     },
 
-    onSuccess: (user) => {
-      login(user);
+    onSuccess: (data: { user: any; token: string }) => {
+      login(data.user, data.token);
       navigate("/dashboard/products");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       setError("root", { type: "server", message: (error as Error).message });
     },
   });
@@ -38,6 +38,7 @@ export const useLogin = (setError: UseFormSetError<LoginSchemaType>) => {
 
 export const useRegister = (setError: UseFormSetError<RegisterSchemaType>) => {
   const navigate = useNavigate();
+
   return useMutation({
     mutationFn: async (data: RegisterSchemaType) => {
       const res = await fetch("https://fakestoreapi.com/users", {
@@ -51,11 +52,13 @@ export const useRegister = (setError: UseFormSetError<RegisterSchemaType>) => {
       if (!res.ok) {
         throw new Error("Invalid username or password");
       }
+      return res.json();
     },
+
     onSuccess: () => {
       navigate("/login");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       setError("root", { type: "server", message: (error as Error).message });
     },
   });
