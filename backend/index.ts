@@ -11,18 +11,32 @@ import {
   getUserByUsername,
 } from "./db";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+function addCorsHeaders(response: Response): Response {
+  const newHeaders = new Headers(response.headers);
+  newHeaders.set("Access-Control-Allow-Origin", "*");
+  newHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  newHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders,
+  });
+}
+
 const server = Bun.serve({
   port: 3000,
   routes: {
     "/api/health": {
-      GET: () =>
-        Response.json({ status: "ok", timestamp: new Date().toISOString() }),
+      GET: () => addCorsHeaders(Response.json({ status: "ok", timestamp: new Date().toISOString() })),
     },
     "/api/users": {
-      GET: (_req: Request) => {
-        const users = getAllUsers();
-        return Response.json({ success: true, data: users });
-      },
+      GET: (_req: Request) => addCorsHeaders(Response.json({ success: true, data: getAllUsers() })),
       POST: async (req: Request) => {
         try {
           const body = (await req.json()) as {
@@ -34,29 +48,29 @@ const server = Bun.serve({
           const { forename, surname, username, password } = body;
 
           if (!forename || !surname || !username || !password) {
-            return Response.json(
+            return addCorsHeaders(Response.json(
               {
                 success: false,
                 error:
                   "Missing required fields: forename, surname, username, password",
               },
               { status: 400 },
-            );
+            ));
           }
 
           const user = createUser({ forename, surname, username, password });
-          return Response.json({ success: true, data: user }, { status: 201 });
+          return addCorsHeaders(Response.json({ success: true, data: user }, { status: 201 }));
         } catch (error: any) {
           if (error.message?.includes("UNIQUE constraint failed")) {
-            return Response.json(
+            return addCorsHeaders(Response.json(
               { success: false, error: "Username already exists" },
               { status: 409 },
-            );
+            ));
           }
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: error.message },
             { status: 500 },
-          );
+          ));
         }
       },
     },
@@ -65,12 +79,12 @@ const server = Bun.serve({
         const id = Number(req.params.id);
         const user = getUserById(id);
         if (!user) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "User not found" },
             { status: 404 },
-          );
+          ));
         }
-        return Response.json({ success: true, data: user });
+        return addCorsHeaders(Response.json({ success: true, data: user }));
       },
       PUT: async (req: Request & { params: { id: string } }) => {
         const id = Number(req.params.id);
@@ -90,35 +104,35 @@ const server = Bun.serve({
 
           const user = updateUser(id, updateData);
           if (!user) {
-            return Response.json(
+            return addCorsHeaders(Response.json(
               { success: false, error: "User not found" },
               { status: 404 },
-            );
+            ));
           }
-          return Response.json({ success: true, data: user });
+          return addCorsHeaders(Response.json({ success: true, data: user }));
         } catch (error: any) {
           if (error.message?.includes("UNIQUE constraint failed")) {
-            return Response.json(
+            return addCorsHeaders(Response.json(
               { success: false, error: "Username already exists" },
               { status: 409 },
-            );
+            ));
           }
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: error.message },
             { status: 500 },
-          );
+          ));
         }
       },
       DELETE: (req: Request & { params: { id: string } }) => {
         const id = Number(req.params.id);
         const deleted = deleteUser(id);
         if (!deleted) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "User not found" },
             { status: 404 },
-          );
+          ));
         }
-        return Response.json({ success: true, message: "User deleted" });
+        return addCorsHeaders(Response.json({ success: true, message: "User deleted" }));
       },
     },
     "/api/auth/login": {
@@ -130,31 +144,31 @@ const server = Bun.serve({
         const { username, password } = body;
 
         if (!username || !password) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "Username and password required" },
             { status: 400 },
-          );
+          ));
         }
         const user = getUserByUsername(username);
         if (!user) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "Invalid username or password" },
             { status: 401 },
-          );
+          ));
         }
         const isValid = verifyPassword(password, user.password);
         if (!isValid) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "Invalid username or password" },
             { status: 401 },
-          );
+          ));
         }
-        return Response.json({
+        return addCorsHeaders(Response.json({
           id: user.id,
           username: user.username,
           forename: user.forename,
           surname: user.surname,
-        });
+        }));
       },
     },
     "/api/auth/register": {
@@ -167,18 +181,18 @@ const server = Bun.serve({
         const { username, password, email } = body;
 
         if (!username || !password) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "Username and password required" },
             { status: 400 },
-          );
+          ));
         }
 
         const existingUser = getUserByUsername(username);
         if (existingUser) {
-          return Response.json(
+          return addCorsHeaders(Response.json(
             { success: false, error: "Username already exists" },
             { status: 409 },
-          );
+          ));
         }
 
         const newUser = createUser({
@@ -188,12 +202,12 @@ const server = Bun.serve({
           password,
         });
 
-        return Response.json({
+        return addCorsHeaders(Response.json({
           id: newUser.id,
           username: newUser.username,
           forename: newUser.forename,
           surname: newUser.surname,
-        });
+        }));
       },
     },
   },
@@ -201,19 +215,11 @@ const server = Bun.serve({
     if (req.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
+        headers: corsHeaders,
       });
     }
     return new Response(null, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      },
+      headers: corsHeaders,
     });
   },
 });

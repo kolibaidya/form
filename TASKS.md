@@ -1,98 +1,43 @@
-# Koli's Tasks
+# Junior Developer Tasks
 
-## Task 1: Fix the Sidebar (Priority!)
+## Frontend Development Tasks
 
-The sidebar is not displaying.
+### Task 1: Sidebar Implementation
 
-**Hint:** The shadcn sidebar documentation shows the structure. Compare your `DashboardLayout` with the example. What's missing around the main content area?
+**Requirements:**
 
----
+- Create a reusable Sidebar component that displays on all pages
+- Show all sidebar items when user is logged in
+- Show only Login and Register links when user is logged out
 
-## Task 2: Rename Sidebar
+**Technical Details:**
 
-Rename `src/components/app-Sidebar.tsx` to `src/components/sidebar.tsx`
+- Use conditional rendering based on authentication state
+- Store authentication state in context or global state
+- Ensure sidebar is responsive and mobile-friendly
 
-**Think about:** What else needs to change when you rename a file?
+### Task 2: UI/UX Improvements
 
----
+**Requirements:**
 
-## Task 3: Implement Login with Zustand
+- Redesign the sidebar to be more visually appealing
+- Improve spacing, typography, and visual hierarchy
+- Add hover effects and transitions
+- Make the design consistent with modern UI/UX patterns
+- Ensure proper contrast and accessibility
 
-Keep using React Hook Form and TanStack Query. Just add Zustand for auth state.
+### Task 3: Navigation Cleanup
 
-### Step 3a: Install Zustand
+**Requirements:**
 
-```bash
-bun add zustand
-```
+- Remove "main" from navigation (if present)
+- Ensure all pages have proper navigation
+- Update all routes to include the sidebar
+- Remove any duplicate navigation elements
 
-### Step 3b: Create Auth Store
+**Notes:**
 
-Create `src/stores/authStore.ts`
-
-**Think about:**
-
-- What user info do you want to store?
-- What actions does the store need?
-
-**Question:** Do you need a Provider for Zustand like you do for React Query?
-
-### Step 3c: Update useLogin Hook
-
-Modify `src/hooks/userHooks.tsx`:
-
-1. Import the auth store
-2. On successful login, update the Zustand store with user data
-3. Keep using TanStack Query for the API call
-4. Keep using React Hook Form's setError for validation
-
-### Step 3d: Add Login Endpoint to Backend
-
-Add `POST /api/auth/login` to `backend/index.ts`
-
-**Hint:** Export `getUserByUsername` and `verifyPassword` from `backend/db.ts` first.
-
-### Step 3e: Use Backend URL
-
-Update `useLogin` to call your Bun backend at `http://localhost:3000` instead of `fakestoreapi.com`
-
----
-
-## Task 4: Protect Dashboard Routes
-
-Users should only access `/dashboard/*` if logged in.
-
-**Think about:** Where should the auth check happen?
-
-**Options to consider:**
-
-1. Check Zustand store in each page component?
-2. Create a wrapper component?
-3. Check in React Router's routing?
-
-**Hint:** How does the current login page redirect to products on success? Can you do the reverse check?
-
----
-
-## Task Summary
-
-1. [x] Fix sidebar not displaying
-2. [x] Rename sidebar file to sidebar.tsx
-3. [x] Install Zustand
-4. [x] Create authStore.ts
-5. [x] Export auth helpers from backend/db.ts
-6. [x] Add login endpoint to backend/index.ts
-7. [x] Update useLogin to use Zustand + your backend
-8. [x] Protect dashboard routes
-
-## Post Tasks
-
-1. [] Fix Login Bug
-2. [] Allow the Sidebar to be available on all pages so users can navigate
-
----
-
-## Resources
-
-- [Zustand Docs](https://docs.pmnd.rs/zustand/getting-started/introduction)
-- [TanStack Query Mutations](https://tanstack.com/query/latest/docs/guides/mutations)
+- Do not modify backend code
+- This is a learning exercise - focus on understanding the requirements and implementing them
+- Ask questions if requirements are unclear
+- Test thoroughly before submitting
