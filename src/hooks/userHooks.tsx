@@ -26,8 +26,13 @@ export const useLogin = (setError: UseFormSetError<LoginSchemaType>) => {
       return res.json();
     },
 
-    onSuccess: (data: { user: any; token: string }) => {
-      login(data.user, data.token);
+    onSuccess: (user: {
+      id: number;
+      username: string;
+      forename: string;
+      surname: string;
+    }) => {
+      login(user);
       navigate("/dashboard/products");
     },
     onError: (error: any) => {
@@ -41,7 +46,7 @@ export const useRegister = (setError: UseFormSetError<RegisterSchemaType>) => {
 
   return useMutation({
     mutationFn: async (data: RegisterSchemaType) => {
-      const res = await fetch("https://fakestoreapi.com/users", {
+      const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -50,7 +55,9 @@ export const useRegister = (setError: UseFormSetError<RegisterSchemaType>) => {
         }),
       });
       if (!res.ok) {
-        throw new Error("Invalid username or password");
+        const errorData = await res.json();
+
+        throw new Error(errorData.error || "Registration failed");
       }
       return res.json();
     },

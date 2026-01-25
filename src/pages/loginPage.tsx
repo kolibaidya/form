@@ -9,9 +9,9 @@ import { useAuthStore } from "@/stores/authStore";
 import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
 
-  if (isAuthenticated) {
+  if (user) {
     return <Navigate to="/dashboard/products" replace />;
   }
 
