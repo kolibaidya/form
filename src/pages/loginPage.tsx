@@ -9,9 +9,9 @@ import { useAuthStore } from "@/stores/authStore";
 import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  if (user) {
+  if (isAuthenticated) {
     return <Navigate to="/dashboard/products" replace />;
   }
 
@@ -28,43 +28,55 @@ export default function LoginPage() {
       root: null,
     },
   });
-  const { mutateAsync, isPending } = useLogin(setError);
+  const { mutate, isPending } = useLogin(setError);
 
-  const onSubmit = async (data: LoginSchemaType) => {
-    await mutateAsync(data);
+  const onSubmit = (data: LoginSchemaType) => {
+    mutate(data);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md mx-auto mt-10 p-6 border rounded shadow flex flex-col gap-4 bg-white"
-    >
-      <h2 className="text-2xl font-semibold text-center">Login</h2>
+    <div className="min-h-screen flex-items-center justify-center px-4 bg-gray-50">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md p-5 sm:p-6 border rounded-lg shadow bg-white flex flex-col gap-4"
+      >
+        <h2 className="text-xl sm:text-2xl font-semibold text-center">Login</h2>
 
-      <Input type="text" placeholder="Username" {...register("username")} />
+        <Input type="text" placeholder="Username" {...register("username")} />
 
-      <ErrorMessage
-        errors={errors}
-        name="username"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <ErrorMessage
+          errors={errors}
+          name="username"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm">{message}</p>
+          )}
+        />
 
-      <Input type="password" placeholder="Password" {...register("password")} />
-      <ErrorMessage
-        errors={errors}
-        name="password"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <Input
+          type="password"
+          placeholder="Password"
+          {...register("password")}
+        />
+        <ErrorMessage
+          errors={errors}
+          name="password"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm">{message}</p>
+          )}
+        />
 
-      <ErrorMessage
-        errors={errors}
-        name="root"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <ErrorMessage
+          errors={errors}
+          name="root"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm text-center">{message}</p>
+          )}
+        />
 
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Logging in..." : "Login"}
-      </Button>
-    </form>
+        <Button type="submit" disabled={isPending} className="w-full">
+          {isPending ? "Logging in..." : "Login"}
+        </Button>
+      </form>
+    </div>
   );
 }

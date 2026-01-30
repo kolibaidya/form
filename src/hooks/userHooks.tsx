@@ -19,11 +19,13 @@ export const useLogin = (setError: UseFormSetError<LoginSchemaType>) => {
           password: data.password,
         }),
       });
+      const result = await res.json();
+
       if (!res.ok) {
-        throw new Error("Invalid username or password");
+        throw new Error(result.error || "Login failed");
       }
 
-      return res.json();
+      return result;
     },
 
     onSuccess: (user: {

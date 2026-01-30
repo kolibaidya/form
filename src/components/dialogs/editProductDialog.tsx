@@ -48,58 +48,72 @@ export function EditProductDialog({
       open={isOpen}
       onOpenChange={(isOpen) => !isOpen && handleClose(false)}
     >
-      <DialogContent>
+      <DialogContent className="w-[95vw] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-base sm:text-lg">
+            Edit Product
+          </DialogTitle>
+          <DialogDescription className="text-sm">
             Update the product inforation and save changes
           </DialogDescription>
         </DialogHeader>
         <form
           onSubmit={handleSubmit(async (data) => {
-            console.log("Data from react-hook-form handleSubmit:", data);
             await mutateAsync({ id: editProductDialogData.id, data });
           })}
+          className="space-y-3"
         >
           <Input
             type="text"
             placeholder="Title"
             {...register("title")}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
             errors={errors}
             name="title"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
           <Input
             type="number"
             step="0.01"
             placeholder="Price"
             {...register("price", { valueAsNumber: true })}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
             errors={errors}
             name="price"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
           <Input
             type="text"
             placeholder="Category"
             {...register("category")}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
             errors={errors}
             name="category"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
-          <DialogFooter>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="w-full sm:w-auto">
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+            >
               {isPending ? "Editing..." : " Submit"}
             </Button>
           </DialogFooter>

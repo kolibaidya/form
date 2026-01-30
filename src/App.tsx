@@ -6,24 +6,27 @@ import RegisterPage from "@/pages/registerPage";
 import { ProductPage } from "@/pages/productPage";
 import { PhonePage } from "@/pages/phonePage";
 import ProtectedRoute from "./routes/protectedRoute";
+import { SidebarProvider } from "./components/ui/sidebar";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route index element={<Navigate to="/register" replace />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="login" element={<LoginPage />} />
-        </Route>
-        <Route element={<ProtectedRoute />}>
-          <Route path="dashboard" element={<DashboardLayout />}>
-            <Route index element={<Navigate to="products" replace />} />
-            <Route path="products" element={<ProductPage />} />
-            <Route path="phones" element={<PhonePage />} />
+      <SidebarProvider>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route index element={<Navigate to="/register" replace />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="login" element={<LoginPage />} />
           </Route>
-        </Route>
-      </Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardLayout />}>
+              <Route index element={<Navigate to="products" replace />} />
+              <Route path="products" element={<ProductPage />} />
+              <Route path="phones" element={<PhonePage />} />
+            </Route>
+          </Route>
+        </Routes>
+      </SidebarProvider>
     </BrowserRouter>
   );
 }

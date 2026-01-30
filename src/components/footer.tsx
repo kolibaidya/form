@@ -1,7 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="border-t fixed bottom-0 right-0 px-4 py-3 w-full text-sm text-center bg-blue-200">
-      Product Footer
+    <footer className="w-full border-t bg-blue-200 px-4 py-3">
+      <p className="text-center text-sm sm:text-base font-semibold">
+        Product Footer
+      </p>
     </footer>
   );
 }

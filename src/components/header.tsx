@@ -1,7 +1,9 @@
 export default function Header() {
   return (
-    <header className="border-b fixed top-0 left-0 px-4 py-3 w- w-full text-sm text-center bg-gray-200">
-      Product Header
+    <header className="flex items-center px-4 py-3 border-b bg-white">
+      <h1 className="w-full text-center text-base sm:text-lg font-semibold bg-amber-200 py-1 rounded">
+        Product Header
+      </h1>
     </header>
   );
 }

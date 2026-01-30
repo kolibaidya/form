@@ -49,51 +49,65 @@ export const CreateProductDialog = () => {
           <Brain />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[95vw] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create New Product</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">
+            Create New Product
+          </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <Input
             type="text"
             placeholder="Title"
             {...register("title")}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
             errors={errors}
             name="title"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
           <Input
             type="number"
             step="any"
             placeholder="Price"
             {...register("price", { valueAsNumber: true })}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
             errors={errors}
             name="price"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
           <Input
             type="text"
             placeholder="Category"
             {...register("category")}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
             errors={errors}
             name="category"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
 
-          <DialogFooter>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="w-full sm:w-auto">
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+            >
               {isPending ? "Creating..." : " Submit"}
             </Button>
           </DialogFooter>

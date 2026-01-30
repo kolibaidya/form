@@ -24,14 +24,19 @@ export const DeleteProductDialog = ({
       open={isOpen}
       onOpenChange={(isOpen) => !isOpen && handleClose(false)}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[90vw] sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Delete Product</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">
+            Delete Product
+          </DialogTitle>
         </DialogHeader>
-        <p>Are you sure you want to delete this product?</p>
-        <DialogFooter>
+        <p className="text-sm text-gray-600">
+          Are you sure you want to delete this product?
+        </p>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
           <Button
-            variant={"destructive"}
+            variant="destructive"
+            className="w-full"
             onClick={async () => {
               await mutateAsync(data.id);
               handleClose(true);

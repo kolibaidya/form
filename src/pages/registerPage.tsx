@@ -8,8 +8,16 @@ import {
   type RegisterSchemaType,
 } from "@/schema/registerSchema";
 import { useRegister } from "@/hooks/userHooks";
+import { Navigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 
 export default function RegisterPage() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard/products" replace />;
+  }
+
   const {
     register,
     handleSubmit,
@@ -23,50 +31,65 @@ export default function RegisterPage() {
       root: null,
     },
   });
-  const { mutateAsync, isPending } = useRegister(setError);
+  const { mutate, isPending } = useRegister(setError);
 
-  const onSubmit = async (data: RegisterSchemaType) => {
-    console.log("Data from react-hook-form handleSubmit:", data);
-    await mutateAsync(data);
+  const onSubmit = (data: RegisterSchemaType) => {
+    mutate(data);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md mx-auto mt-10 p-6 border rounded shadow flex flex-col gap-4 bg-white"
-    >
-      <h2 className="text-2xl font-semibold text-center">Register</h2>
+    <div className="min-h-screen flex-item-center justify-center px-4 bg-gray-50">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md p-5 sm:p-6 border rounded-lg shadow bg-white flex flex-col gap-4"
+      >
+        <h2 className="text-xl sm:text-2xl font-semibold text-center">
+          Register
+        </h2>
 
-      <Input type="email" placeholder="Email" {...register("email")} />
-      <ErrorMessage
-        errors={errors}
-        name="email"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <Input type="email" placeholder="Email" {...register("email")} />
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm">{message}</p>
+          )}
+        />
 
-      <Input type="text" placeholder="Username" {...register("username")} />
-      <ErrorMessage
-        errors={errors}
-        name="username"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <Input type="text" placeholder="Username" {...register("username")} />
+        <ErrorMessage
+          errors={errors}
+          name="username"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm">{message}</p>
+          )}
+        />
 
-      <Input type="password" placeholder="Password" {...register("password")} />
-      <ErrorMessage
-        errors={errors}
-        name="password"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <Input
+          type="password"
+          placeholder="Password"
+          {...register("password")}
+        />
+        <ErrorMessage
+          errors={errors}
+          name="password"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm">{message}</p>
+          )}
+        />
 
-      <ErrorMessage
-        errors={errors}
-        name="root"
-        render={({ message }) => <p className="text-red-500">{message}</p>}
-      />
+        <ErrorMessage
+          errors={errors}
+          name="root"
+          render={({ message }) => (
+            <p className="text-red-500 text-sm text-center">{message}</p>
+          )}
+        />
 
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Registering..." : "Register"}
-      </Button>
-    </form>
+        <Button type="submit" disabled={isPending} className="w-full">
+          {isPending ? "Registering..." : "Register"}
+        </Button>
+      </form>
+    </div>
   );
 }

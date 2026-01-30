@@ -1,14 +1,14 @@
-import MainLayout from "@/layouts/mainLayout";
+import DashboardLayout from "@/layouts/dashboardLayout";
 import LoginPage from "@/pages/loginPage";
 import RegisterPage from "@/pages/registerPage";
 import { Navigate, Route } from "react-router";
 
 export default function AuthRoutes() {
   return (
-    <Route element={<MainLayout />}>
-      <Route index element={<Navigate to="/register" replace />} />
-      <Route path="register" element={<RegisterPage />} />
+    <Route element={<DashboardLayout />}>
+      <Route index element={<Navigate to="register" replace />} />
       <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
     </Route>
   );
 }
