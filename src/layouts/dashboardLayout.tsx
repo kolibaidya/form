@@ -10,10 +10,13 @@ export default function DashboardLayout() {
       <AppSidebar />
       <div className="flex flex-col flex-1">
         <Header />
-        <div className="md:hidden p-2">
+        <div className="md:hidden sticky top-0 z-50 px-4 py-2 bg-white shadow-sm">
           <SidebarTrigger />
         </div>
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main
+          className="flex-1 p-6 overflow-y-auto"
+          aria-label="Dashboard content"
+        >
           <Outlet />
         </main>
         <Footer />

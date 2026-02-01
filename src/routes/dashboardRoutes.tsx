@@ -1,6 +1,6 @@
 import { PhonePage } from "@/pages/phonePage";
 import { ProductPage } from "@/pages/productPage";
-import { Navigate, Route } from "react-router";
+import { Navigate, Route } from "react-router-dom";
 import ProtectedRoute from "./protectedRoute";
 
 export default function DashboardRoutes() {

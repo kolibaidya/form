@@ -38,30 +38,41 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex-item-center justify-center px-4 bg-gray-50">
+    <div className="min-h-screen flex item-center justify-center px-4 py-8 bg-gray-50">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md p-5 sm:p-6 border rounded-lg shadow bg-white flex flex-col gap-4"
+        className="w-full max-w-md p-6 sm:p-8 border rounded-lg shadow-lg bg-white flex flex-col gap-5"
+        aria-label="Register form"
       >
-        <h2 className="text-xl sm:text-2xl font-semibold text-center">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-center text-gray-800">
           Register
         </h2>
 
-        <Input type="email" placeholder="Email" {...register("email")} />
+        <Input
+          type="email"
+          placeholder="Email"
+          {...register("email")}
+          className="w-full"
+        />
         <ErrorMessage
           errors={errors}
           name="email"
           render={({ message }) => (
-            <p className="text-red-500 text-sm">{message}</p>
+            <p className="text-red-500 text-sm sm:text-base">{message}</p>
           )}
         />
 
-        <Input type="text" placeholder="Username" {...register("username")} />
+        <Input
+          type="text"
+          placeholder="Username"
+          {...register("username")}
+          className="w-full"
+        />
         <ErrorMessage
           errors={errors}
           name="username"
           render={({ message }) => (
-            <p className="text-red-500 text-sm">{message}</p>
+            <p className="text-red-500 text-sm sm:text-base">{message}</p>
           )}
         />
 
@@ -69,12 +80,13 @@ export default function RegisterPage() {
           type="password"
           placeholder="Password"
           {...register("password")}
+          className="w-full"
         />
         <ErrorMessage
           errors={errors}
           name="password"
           render={({ message }) => (
-            <p className="text-red-500 text-sm">{message}</p>
+            <p className="text-red-500 text-sm sm:text-base">{message}</p>
           )}
         />
 
@@ -82,11 +94,17 @@ export default function RegisterPage() {
           errors={errors}
           name="root"
           render={({ message }) => (
-            <p className="text-red-500 text-sm text-center">{message}</p>
+            <p className="text-red-500 text-sm sm:text-base text-center">
+              {message}
+            </p>
           )}
         />
 
-        <Button type="submit" disabled={isPending} className="w-full">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="w-full py-2 sm:py-3 mt-2 transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-md"
+        >
           {isPending ? "Registering..." : "Register"}
         </Button>
       </form>

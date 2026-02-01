@@ -1,7 +1,7 @@
 import DashboardLayout from "@/layouts/dashboardLayout";
 import LoginPage from "@/pages/loginPage";
 import RegisterPage from "@/pages/registerPage";
-import { Navigate, Route } from "react-router";
+import { Navigate, Route } from "react-router-dom";
 
 export default function AuthRoutes() {
   return (
