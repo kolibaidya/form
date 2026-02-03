@@ -7,6 +7,7 @@ import { loginSchema, type LoginSchemaType } from "@/schema/loginSchema";
 import { useLogin } from "@/hooks/userHooks";
 import { useAuthStore } from "@/stores/authStore";
 import { Navigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -35,63 +36,95 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8  bg-gray-50">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md p-6 sm:p-8 border rounded-lg shadow-lg bg-white flex flex-col gap-5"
-        aria-label="Login form"
-      >
-        <h2 className="text-2xl sm:text-3xl font-semibold text-center text-gray-800">
-          Login
-        </h2>
-
-        <Input
-          type="text"
-          placeholder="Username"
-          {...register("username")}
-          className="w-full"
-        />
-
-        <ErrorMessage
-          errors={errors}
-          name="username"
-          render={({ message }) => (
-            <p className="text-red-500 text-sm sm:text-base">{message}</p>
-          )}
-        />
-
-        <Input
-          type="password"
-          placeholder="Password"
-          {...register("password")}
-          className="w-full"
-        />
-        <ErrorMessage
-          errors={errors}
-          name="password"
-          render={({ message }) => (
-            <p className="text-red-500 text-sm sm:text-base">{message}</p>
-          )}
-        />
-
-        <ErrorMessage
-          errors={errors}
-          name="root"
-          render={({ message }) => (
-            <p className="text-red-500 text-sm sm:text-base text-center">
-              {message}
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-zinc-50">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-8 sm:p-10">
+          <div className="mb-8">
+            <h1 className="text-2xl font-semibold text-zinc-900 mb-2">
+              Welcome back
+            </h1>
+            <p className="text-zinc-500 text-sm">
+              Enter your credentials to access your account
             </p>
-          )}
-        />
+          </div>
 
-        <Button
-          type="submit"
-          disabled={isPending}
-          className="w-full py-2 sm:py-3 mt-2 transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-md"
-        >
-          {isPending ? "Logging in..." : "Login"}
-        </Button>
-      </form>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-zinc-700 mb-1.5">
+                Username
+              </label>
+              <Input
+                id="username"
+                type="text"
+                autoComplete="username"
+                placeholder="Enter your username"
+                disabled={isPending}
+                aria-invalid={errors.username ? "true" : "false"}
+                {...register("username")}
+                className="h-11 border-zinc-300 transition-colors duration-150 ease-out focus-visible:ring-indigo-500 focus-visible:ring-offset-0"
+              />
+              <ErrorMessage
+                errors={errors}
+                name="username"
+                render={({ message }) => (
+                  <p className="mt-1.5 text-sm text-red-600" role="alert">{message}</p>
+                )}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-700 mb-1.5">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                disabled={isPending}
+                aria-invalid={errors.password ? "true" : "false"}
+                {...register("password")}
+                className="h-11 border-zinc-300 transition-colors duration-150 ease-out focus-visible:ring-indigo-500 focus-visible:ring-offset-0"
+              />
+              <ErrorMessage
+                errors={errors}
+                name="password"
+                render={({ message }) => (
+                  <p className="mt-1.5 text-sm text-red-600" role="alert">{message}</p>
+                )}
+              />
+            </div>
+
+            <ErrorMessage
+              errors={errors}
+              name="root"
+              render={({ message }) => (
+                <div 
+                  className="text-sm text-red-700 text-center bg-red-50 border border-red-100 rounded-lg py-2.5 px-3" 
+                  role="alert"
+                >
+                  {message}
+                </div>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium transition-all duration-150 ease-out focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:opacity-70"
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  Signing in…
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </Button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

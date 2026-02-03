@@ -10,7 +10,7 @@ export const ProductPage = () => {
 
   return (
     <div
-      className="p-4 sm:p-6 md:p-8 lg:p-12"
+      className="w-full"
       aria-label="Products Page"
       role="region"
     >
@@ -20,11 +20,11 @@ export const ProductPage = () => {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800">
-                Products Page
+              <h1 className="text-2xl sm:text-3xl font-semibold text-zinc-900">
+                Products
               </h1>
-              <p className="text-sm sm:text-base text-gray-600">
-                Manage your products here.
+              <p className="text-sm text-zinc-500 mt-1">
+                Manage and view your product catalog
               </p>
             </div>
           </div>
@@ -32,7 +32,7 @@ export const ProductPage = () => {
             <ProductFeed products={products} />
           </div>
           <div className="hidden md:block">
-            <Card className="w-full max-w-[1000px] mx-auto transition-shadow duration-200 hover:shadow-lg rounded-md">
+            <Card className="border border-zinc-200 shadow-sm">
               <CardContent className="p-0">
                 <ProductTable products={products} />
               </CardContent>

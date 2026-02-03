@@ -44,9 +44,9 @@ export const CreateProductDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="cursor-pointer">
           Create a new Product
-          <Brain />
+          <Brain className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[95vw] sm:max-w-md">
@@ -99,16 +99,16 @@ export const CreateProductDialog = () => {
 
           <DialogFooter className="flex flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto cursor-pointer">
                 Cancel
               </Button>
             </DialogClose>
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto cursor-pointer"
             >
-              {isPending ? "Creating..." : " Submit"}
+              {isPending ? "Creating..." : "Submit"}
             </Button>
           </DialogFooter>
         </form>

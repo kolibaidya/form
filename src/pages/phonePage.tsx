@@ -14,23 +14,31 @@ export const PhonePage = () => {
   const { isLoading, data: phones, error } = useFetchPhones();
 
   return (
-    <div>
+    <div className="w-full">
       {isLoading && <LoadingDisplay />}
       {error && <ErrorDisplay error={error} />}
       {phones && (
-        <Card className="xl">
-          <CardHeader>
-            <CardTitle>Phone page</CardTitle>
-            <CardDescription>
-              A list of phones fetched from the server. You can now Create,
-              Edit, and Delete phones. You can view the phones in a table with
-              sorting, filtering, and pagination.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <PhoneFeed phones={phones} />
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-zinc-900">
+              Phones
+            </h1>
+            <p className="text-sm text-zinc-500 mt-1">
+              Manage your phone inventory with sorting, filtering, and pagination
+            </p>
+          </div>
+          <Card className="border border-zinc-200 shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">Phone Inventory</CardTitle>
+              <CardDescription>
+                View and manage your phone collection
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <PhoneFeed phones={phones} />
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );

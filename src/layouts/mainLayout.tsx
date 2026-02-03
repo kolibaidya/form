@@ -6,15 +6,15 @@ import { Outlet } from "react-router-dom";
 export default function MainLayout() {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen bg-zinc-50">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <div className="md:hidden sticky top-0 z-50 px-4 py-2 border-b bg-white shadow-sm">
+          <div className="md:hidden sticky top-0 z-50 px-4 py-3 border-b border-zinc-200 bg-white/80 backdrop-blur-md">
             <SidebarTrigger>
-              <Menu className="h-5 w-5 text-gray-700 transition-colors duration-200 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2" />
+              <Menu className="h-5 w-5 text-zinc-600" />
             </SidebarTrigger>
           </div>
-          <main className="flex-1 p-6" aria-label="Main content area">
+          <main className="flex-1 w-full" aria-label="Main content area">
             <Outlet />
           </main>
         </div>
