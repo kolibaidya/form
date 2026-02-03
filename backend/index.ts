@@ -9,6 +9,13 @@ import {
   type UpdateUserInput,
   verifyPassword,
   getUserByUsername,
+  getAllPhones,
+  getPhoneById,
+  createPhone,
+  updatePhone,
+  deletePhone,
+  type CreatePhoneInput,
+  type UpdatePhoneInput,
 } from "./db";
 
 const corsHeaders = {
@@ -208,6 +215,87 @@ const server = Bun.serve({
           forename: newUser.forename,
           surname: newUser.surname,
         }));
+      },
+    },
+    "/api/phones": {
+      GET: () => addCorsHeaders(Response.json(getAllPhones())),
+      POST: async (req: Request) => {
+        try {
+          const body = (await req.json()) as {
+            Brand?: string;
+            Name?: string;
+            ReleaseDate?: string;
+          };
+          const { Brand, Name, ReleaseDate } = body;
+
+          if (!Brand || !Name || !ReleaseDate) {
+            return addCorsHeaders(Response.json(
+              { success: false, error: "Missing required fields: Brand, Name, ReleaseDate" },
+              { status: 400 },
+            ));
+          }
+
+          const phone = createPhone({ Brand, Name, ReleaseDate });
+          return addCorsHeaders(Response.json(phone, { status: 201 }));
+        } catch (error: any) {
+          return addCorsHeaders(Response.json(
+            { success: false, error: error.message },
+            { status: 500 },
+          ));
+        }
+      },
+    },
+    "/api/phones/:id": {
+      GET: (req: Request & { params: { id: string } }) => {
+        const _id = req.params.id;
+        const phone = getPhoneById(_id);
+        if (!phone) {
+          return addCorsHeaders(Response.json(
+            { success: false, error: "Phone not found" },
+            { status: 404 },
+          ));
+        }
+        return addCorsHeaders(Response.json(phone));
+      },
+      PUT: async (req: Request & { params: { id: string } }) => {
+        const _id = req.params.id;
+        try {
+          const body = (await req.json()) as {
+            Brand?: string;
+            Name?: string;
+            ReleaseDate?: string;
+          };
+          const updateData: UpdatePhoneInput = {};
+
+          if (body.Brand !== undefined) updateData.Brand = body.Brand;
+          if (body.Name !== undefined) updateData.Name = body.Name;
+          if (body.ReleaseDate !== undefined) updateData.ReleaseDate = body.ReleaseDate;
+
+          const phone = updatePhone(_id, updateData);
+          if (!phone) {
+            return addCorsHeaders(Response.json(
+              { success: false, error: "Phone not found" },
+              { status: 404 },
+            ));
+          }
+          return addCorsHeaders(Response.json(phone));
+        } catch (error: any) {
+          return addCorsHeaders(Response.json(
+            { success: false, error: error.message },
+            { status: 500 },
+          ));
+        }
+      },
+      DELETE: (req: Request & { params: { id: string } }) => {
+        const _id = req.params.id;
+        const deleted = deletePhone(_id);
+        if (!deleted) {
+          return addCorsHeaders(Response.json(
+            { success: false, error: "Phone not found" },
+            { status: 404 },
+          ));
+        }
+        return addCorsHeaders(Response.json({ success: true, message: "Phone deleted" }));
       },
     },
   },

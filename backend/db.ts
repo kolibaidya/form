@@ -15,6 +15,23 @@ db.run(`
   )
 `);
 
+db.run(`
+  CREATE TABLE IF NOT EXISTS phones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    _id TEXT UNIQUE NOT NULL,
+    Brand TEXT NOT NULL,
+    Name TEXT NOT NULL,
+    ReleaseDate TEXT NOT NULL
+  )
+`);
+
+// Generate unique _id like MongoDB style
+const generateId = () => {
+  const timestamp = Date.now().toString(16);
+  const random = Math.random().toString(16).substring(2, 10);
+  return timestamp + random;
+};
+
 export interface User {
   id: number;
   forename: string;
@@ -111,4 +128,80 @@ export const verifyPassword = (
   hashedPassword: string,
 ): boolean => {
   return bcrypt.compareSync(plainPassword, hashedPassword);
+};
+
+// Phone interface matching the frontend
+export interface Phone {
+  _id: string;
+  Brand: string;
+  Name: string;
+  ReleaseDate: string;
+}
+
+export interface CreatePhoneInput {
+  Brand: string;
+  Name: string;
+  ReleaseDate: string;
+}
+
+export interface UpdatePhoneInput {
+  Brand?: string;
+  Name?: string;
+  ReleaseDate?: string;
+}
+
+// Phone CRUD operations
+export const createPhone = (input: CreatePhoneInput): Phone => {
+  const _id = generateId();
+  const stmt = db.prepare(
+    "INSERT INTO phones (_id, Brand, Name, ReleaseDate) VALUES (?, ?, ?, ?)",
+  );
+  stmt.run(_id, input.Brand, input.Name, input.ReleaseDate);
+  return getPhoneById(_id)!;
+};
+
+export const getAllPhones = (): Phone[] => {
+  const stmt = db.prepare("SELECT _id, Brand, Name, ReleaseDate FROM phones");
+  return stmt.all() as Phone[];
+};
+
+export const getPhoneById = (_id: string): Phone | undefined => {
+  const stmt = db.prepare(
+    "SELECT _id, Brand, Name, ReleaseDate FROM phones WHERE _id = ?",
+  );
+  return stmt.get(_id) as Phone | undefined;
+};
+
+export const updatePhone = (
+  _id: string,
+  input: UpdatePhoneInput,
+): Phone | undefined => {
+  const fields: string[] = [];
+  const values: string[] = [];
+
+  if (input.Brand !== undefined) {
+    fields.push("Brand = ?");
+    values.push(input.Brand);
+  }
+  if (input.Name !== undefined) {
+    fields.push("Name = ?");
+    values.push(input.Name);
+  }
+  if (input.ReleaseDate !== undefined) {
+    fields.push("ReleaseDate = ?");
+    values.push(input.ReleaseDate);
+  }
+
+  if (fields.length === 0) return getPhoneById(_id);
+
+  values.push(_id);
+  const stmt = db.prepare(`UPDATE phones SET ${fields.join(", ")} WHERE _id = ?`);
+  stmt.run(...values);
+  return getPhoneById(_id);
+};
+
+export const deletePhone = (_id: string): boolean => {
+  const stmt = db.prepare("DELETE FROM phones WHERE _id = ?");
+  const result = stmt.run(_id);
+  return result.changes > 0;
 };
