@@ -10,16 +10,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useEditProduct } from "@/hooks/productHooks";
+import type { Product } from "@/models/product";
 import { ProductSchema, type ProductSchemaType } from "@/schema/productSchema";
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AsyncDialogProps } from "react-dialog-async";
 import { useForm } from "react-hook-form";
-import type { product } from "../models/product";
 
 export interface EditProductDialogProps {
   id: number;
-  product: product;
+  product: Product;
 }
 
 export function EditProductDialog({

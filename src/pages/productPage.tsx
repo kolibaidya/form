@@ -9,11 +9,7 @@ export const ProductPage = () => {
   const { isLoading, data: products, error } = useFetchProducts();
 
   return (
-    <div
-      className="w-full"
-      aria-label="Products Page"
-      role="region"
-    >
+    <div className="w-full max-w-none" aria-label="Products Page" role="region">
       {isLoading && <LoadingDisplay />}
       {error && <ErrorDisplay error={error} />}
       {products && (

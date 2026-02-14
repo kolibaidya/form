@@ -71,20 +71,26 @@ export const ProductTable = ({ products }: ProductTableProps) => {
         />
         <CreateProductDialog />
       </div>
-      
-      <div className="overflow-x-auto">
-        <Table>
+
+      <div className="w-full overflow-x-auto">
+        <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-b border-zinc-200 hover:bg-transparent">
+              <TableRow
+                key={headerGroup.id}
+                className="border-b border-zinc-200 hover:bg-transparent"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="h-12 px-4 text-left text-xs font-semibold text-zinc-600 uppercase tracking-wider bg-zinc-50/50">
+                    <TableHead
+                      key={header.id}
+                      className="h-12 px-4 text-left text-xs font-semibold text-zinc-600 uppercase tracking-wider bg-zinc-50/50"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -116,7 +122,10 @@ export const ProductTable = ({ products }: ProductTableProps) => {
                 }`}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="px-4 py-3 text-sm text-zinc-700">
+                  <TableCell
+                    key={cell.id}
+                    className="px-4 py-3 text-sm text-zinc-700"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -165,17 +174,22 @@ export const ProductTable = ({ products }: ProductTableProps) => {
         <div className="text-sm text-zinc-500">
           Showing{" "}
           <span className="font-medium text-zinc-900">
-            {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
+            {table.getState().pagination.pageIndex *
+              table.getState().pagination.pageSize +
+              1}
           </span>{" "}
           to{" "}
           <span className="font-medium text-zinc-900">
             {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-              table.getFilteredRowModel().rows.length
+              (table.getState().pagination.pageIndex + 1) *
+                table.getState().pagination.pageSize,
+              table.getFilteredRowModel().rows.length,
             )}
           </span>{" "}
           of{" "}
-          <span className="font-medium text-zinc-900">{table.getFilteredRowModel().rows.length}</span>{" "}
+          <span className="font-medium text-zinc-900">
+            {table.getFilteredRowModel().rows.length}
+          </span>{" "}
           results
         </div>
         <div className="flex items-center gap-2">

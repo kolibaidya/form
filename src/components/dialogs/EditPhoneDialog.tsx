@@ -1,106 +1,136 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useEditPhone } from "@/hooks/phoneHooks";
-import { phoneSchema, type PhoneSchemaType } from "@/schema/phoneSchema";
+import type { Phone } from "@/models/phone";
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AsyncDialogProps } from "react-dialog-async";
 import { useForm } from "react-hook-form";
+import { phoneSchema, type PhoneSchemaType } from "@/schema/phoneSchema";
+import { useEditPhone } from "@/hooks/phoneHooks";
 
 export interface EditPhoneDialogProps {
-  id: string;
-  phone: PhoneSchemaType;
+  _id: string;
+  phone: Phone;
 }
 
-export const EditPhoneDialog = ({
+export function EditPhoneDialog({
   isOpen,
   handleClose,
-  data: editPhoneDialogData,
-}: AsyncDialogProps<EditPhoneDialogProps, boolean>) => {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<PhoneSchemaType>({
+  data,
+}: AsyncDialogProps<EditPhoneDialogProps, boolean>) {
+  const formKey = data?.phone?._id ?? "edit-phone";
+
+  const form = useForm<PhoneSchemaType>({
     resolver: zodResolver(phoneSchema),
+
     defaultValues: {
-      brand: editPhoneDialogData?.phone.brand ?? "",
-      name: editPhoneDialogData?.phone.name ?? "",
-      releaseDate: editPhoneDialogData?.phone.releaseDate ?? "",
+      Brand: data?.phone?.Brand ?? "",
+      Name: data?.phone?.Name ?? "",
+      ReleaseDate: data?.phone?.ReleaseDate ?? "",
       root: null,
     },
   });
 
-  const { mutateAsync, isPending } = useEditPhone(setError);
+  const editPhoneMutation = useEditPhone(form.setError, handleClose);
+
+  const submitHandler = form.handleSubmit((formData) => {
+    if (!data?.phone) return;
+
+    editPhoneMutation.mutate(
+      {
+        id: data.phone._id,
+        data: formData,
+      },
+      {
+        onSuccess: () => {
+          handleClose(true);
+        },
+      },
+    );
+  });
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(isOpen) => !isOpen && handleClose(false)}
-    >
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
+      <DialogContent key={formKey} className="w-[95vw] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Edit Phone</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Edit Phone</DialogTitle>
+          <DialogDescription className="text-sm">
+            Update the phone information and save changes
+          </DialogDescription>
         </DialogHeader>
         <form
-          onSubmit={handleSubmit(async (data) => {
-            await mutateAsync({ id: editPhoneDialogData.id, data });
-            handleClose(true);
-          })}
+          id="edit-phone-form"
+          onSubmit={submitHandler}
+          className="space-y-3"
         >
           <Input
-            type="text"
-            placeholder="Name"
-            {...register("name")}
-            className="m-2"
-          />
-          <ErrorMessage
-            errors={errors}
-            name="name"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
-          />
-          <Input
-            type="text"
+            {...form.register("Brand")}
             placeholder="Brand"
-            {...register("brand")}
-            className="m-2"
+            className="w-full"
           />
           <ErrorMessage
-            errors={errors}
-            name="brand"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            errors={form.formState.errors}
+            name="Brand"
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
           <Input
-            type="text"
-            placeholder="Release Date"
-            {...register("releaseDate")}
-            className="m-2"
+            {...form.register("Name")}
+            placeholder="Name"
+            className="w-full"
           />
           <ErrorMessage
-            errors={errors}
-            name="releaseDate"
-            render={({ message }) => <p className="text-red-500">{message}</p>}
+            errors={form.formState.errors}
+            name="Name"
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
           />
-
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Editing..." : "Submit"}
-            </Button>
-          </DialogFooter>
+          <Input
+            {...form.register("ReleaseDate")}
+            placeholder="ReleaseDate"
+            className="w-full"
+          />
+          <ErrorMessage
+            errors={form.formState.errors}
+            name="ReleaseDate"
+            render={({ message }) => (
+              <p className="text-red-500 text-sm">{message}</p>
+            )}
+          />
+          {form.formState.errors.root && (
+            <p className="text-red-500 text-sm">
+              {form.formState.errors.root.message}{" "}
+            </p>
+          )}
         </form>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <Button
+            variant="outline"
+            onClick={() => handleClose(false)}
+            className="w-full sm:w-auto"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="edit-phone-form"
+            disabled={editPhoneMutation.isPending}
+            className="w-full sm:w-auto"
+          >
+            {editPhoneMutation.isPending ? "Editing..." : " Save Changes"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-};
+}

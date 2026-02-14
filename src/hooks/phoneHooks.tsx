@@ -1,95 +1,91 @@
 import type { PhoneSchemaType } from "@/schema/phoneSchema";
+import type { Phone } from "@/models/phone";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UseFormSetError } from "react-hook-form";
 
-const baseUrl = "https://crudcrud.com/api/9a04c33a8e434334856644cbd1dd4710";
+const baseUrl = "http://localhost:3000/api/phones";
+
 export const useFetchPhones = () => {
-  return useQuery({
+  return useQuery<Phone[]>({
     queryKey: ["phones"],
     queryFn: async () => {
-      const res = await fetch(`${baseUrl}/phone`);
-      if (!res.ok) {
-        throw new Error("Failed to fetch products");
-      }
+      const res = await fetch(baseUrl);
+      if (!res.ok) throw new Error("Failed to fetch phones");
       return res.json();
     },
   });
 };
 
-interface useEditPhoneProps {
-  id: string;
-  data: PhoneSchemaType;
-}
-
 export const useCreatePhones = (
   setError: UseFormSetError<PhoneSchemaType>,
-  setOpen: (open: boolean) => void
+  setOpen: (open: boolean) => void,
+  reset: () => void,
 ) => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async (data: PhoneSchemaType) => {
-      const res = await fetch(`${baseUrl}/phone`, {
+    mutationFn: async (payLoad: PhoneSchemaType) => {
+      const res = await fetch(baseUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Brand: data.brand,
-          Name: data.name,
-          ReleaseDate: data.releaseDate,
-        }),
+        body: JSON.stringify(payLoad),
       });
-      if (!res.ok) {
-        throw new Error("Invalid username or password");
-      }
+      if (!res.ok) throw new Error("Failed to create phone");
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["phones"] });
+      reset();
       setOpen(false);
     },
-    onError: (error) => {
-      setError("root", { type: "server", message: (error as Error).message });
+    onError: (error: Error) => {
+      setError("root", { type: "server", message: error.message });
     },
   });
 };
 
-export const useEditPhone = (setError: UseFormSetError<PhoneSchemaType>) => {
+export const useEditPhone = (
+  setError: UseFormSetError<PhoneSchemaType>,
+  setOpen: (open: boolean) => void,
+) => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async ({ id, data }: useEditPhoneProps) => {
-      const res = await fetch(`${baseUrl}/phone/${id}`, {
+    mutationFn: async ({ id, data }: { id: string; data: PhoneSchemaType }) => {
+      const res = await fetch(`${baseUrl}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Brand: data.brand,
-          Name: data.name,
-          ReleaseDate: data.releaseDate,
-        }),
+        body: JSON.stringify(data),
       });
-      if (!res.ok) {
-        throw new Error("Failed to edit product");
-      }
+      if (!res.ok) throw new Error("Failed to update phone");
+      return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["phones"] });
+      setOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: ["phones"],
+      });
     },
-    onError: (error) => {
-      setError("root", { type: "server", message: (error as Error).message });
+
+    onError: (error: Error) => {
+      setError("root", { type: "server", message: error.message });
     },
   });
 };
 
 export const useDeletePhone = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`${baseUrl}/phone/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) {
-        throw new Error("Failed to delete product");
-      }
+      const res = await fetch(`${baseUrl}/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete phone");
+      return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["phones"] });
+      queryClient.invalidateQueries({
+        queryKey: ["phones"],
+      });
     },
   });
 };

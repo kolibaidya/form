@@ -1,45 +1,55 @@
-import { useFetchPhones } from "@/hooks/phoneHooks";
+import { CreatePhoneDialog } from "@/components/dialogs/CreatePhoneDialog";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import LoadingDisplay from "@/components/LoadingDisplay";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { PhoneFeed } from "@/components/feed/phoneFeed";
+import LoadingDisplay from "@/components/LoadingDisplay";
+import { PhoneTable } from "@/components/table/phoneTable";
+import { Card, CardContent } from "@/components/ui/card";
+import { useFetchPhones } from "@/hooks/phoneHooks";
 
 export const PhonePage = () => {
-  const { isLoading, data: phones, error } = useFetchPhones();
+  const { data: phones = [], isLoading, isError, error } = useFetchPhones();
+
+  if (isLoading) {
+    return <LoadingDisplay />;
+  }
+
+  if (isError) {
+    return <ErrorDisplay error={error} />;
+  }
 
   return (
-    <div className="w-full">
-      {isLoading && <LoadingDisplay />}
-      {error && <ErrorDisplay error={error} />}
-      {phones && (
-        <div className="space-y-6">
+    <div className="w-full max-w-none" aria-label="Phones Page" role="region">
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-semibold text-zinc-900">
               Phones
             </h1>
             <p className="text-sm text-zinc-500 mt-1">
-              Manage your phone inventory with sorting, filtering, and pagination
+              Manage and view your phone catalog
             </p>
           </div>
-          <Card className="border border-zinc-200 shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Phone Inventory</CardTitle>
-              <CardDescription>
-                View and manage your phone collection
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <PhoneFeed phones={phones} />
-            </CardContent>
-          </Card>
+          <CreatePhoneDialog />
         </div>
-      )}
+        {phones.length === 0 && (
+          <p className="text-sm text-zinc-500">No phones found</p>
+        )}
+        {phones.length > 0 && (
+          <div className="space-y-6">
+            <div className="block md:hidden">
+              <PhoneFeed phones={phones} />
+            </div>
+
+            <div className="hidden md:block">
+              <Card className="border border-zinc-200 shadow-sm">
+                <CardContent className="p-0">
+                  <PhoneTable phones={phones} />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

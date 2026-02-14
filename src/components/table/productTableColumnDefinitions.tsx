@@ -1,14 +1,17 @@
-import type { product } from "../models/product";
+import type { Product } from "@/models/product";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const productTableColumnDefinitions = (): ColumnDef<product>[] => [
+export const productTableColumnDefinitions = (): ColumnDef<Product>[] => [
   {
     accessorKey: "title",
     header: "Title",
     size: 400,
     minSize: 250,
     cell: ({ row }) => (
-      <div className="capitalize truncate max-w-[400px]" title={row.getValue("title")}>
+      <div
+        className="capitalize truncate max-w-[400px]"
+        title={row.getValue("title")}
+      >
         {row.getValue("title")}
       </div>
     ),
