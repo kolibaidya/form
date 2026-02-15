@@ -60,14 +60,14 @@ export const ProductTable = ({ products }: ProductTableProps) => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border-b border-zinc-200 bg-zinc-50/50">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 px-6 py-5 border-b border-zinc-200 bg-white">
         <Input
           placeholder="Filter by title..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm h-10 border-zinc-300 focus-visible:ring-indigo-500"
+          className="max-w-sm h-11 border-zinc-300 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-200"
         />
         <CreateProductDialog />
       </div>
@@ -84,7 +84,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
                   return (
                     <TableHead
                       key={header.id}
-                      className="h-12 px-4 text-left text-xs font-semibold text-zinc-600 uppercase tracking-wider bg-zinc-50/50"
+                      className="h-14 px-6 text-left text-sm font-semibold text-zinc-700 uppercase tracking-wide bg-zinc-50"
                     >
                       {header.isPlaceholder
                         ? null
@@ -117,14 +117,14 @@ export const ProductTable = ({ products }: ProductTableProps) => {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className={`border-b border-zinc-100 transition-colors duration-150 ease-out hover:bg-zinc-50/80 ${
+                className={`border-b border-zinc-100 transition-all duration-200 hover:bg-zinc-50 hover:shadow-[inset_0_-1px_0_0_rgba(0,0,0,0.04)] ${
                   index % 2 === 0 ? "bg-white" : "bg-zinc-50/30"
                 }`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className="px-4 py-3 text-sm text-zinc-700"
+                    className="px-6 py-4 text-sm text-zinc-800"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
@@ -134,7 +134,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-8 px-3 text-zinc-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-150 ease-out cursor-pointer"
+                      className="h-9 px-3 text-zinc-600 hover:text-indigo-600 hover:bg-indigo-50 focus:bg-indigo-50 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 transition-all duration-200 "
                       onClick={() => {
                         editProductDialog.open({
                           id: row.original.id,
@@ -154,7 +154,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-8 px-3 text-zinc-600 hover:text-red-600 hover:bg-red-50 transition-all duration-150 ease-out cursor-pointer"
+                      className="h-9 px-3 text-zinc-600 hover:text-red-600 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 transition-all duration-200"
                       onClick={() => {
                         deleteProductDialog.open({ id: row.original.id });
                       }}
@@ -170,7 +170,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between px-4 py-4 border-t border-zinc-200 bg-zinc-50/50">
+      <div className="flex flex-col sm:items-center justify-between gap-4 px-6 py-5 border-t border-zinc-200 bg-white">
         <div className="text-sm text-zinc-500">
           Showing{" "}
           <span className="font-medium text-zinc-900">
@@ -196,7 +196,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
           <Button
             variant="outline"
             size="sm"
-            className="h-8 px-3 border-zinc-300 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 disabled:opacity-50 cursor-pointer"
+            className="h-9 px-4 border-zinc-300 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 disabled:opacity-50 cursor-pointer"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >

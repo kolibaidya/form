@@ -99,7 +99,10 @@ export const CreateProductDialog = () => {
 
           <DialogFooter className="flex flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="w-full sm:w-auto cursor-pointer">
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto cursor-pointer"
+              >
                 Cancel
               </Button>
             </DialogClose>
