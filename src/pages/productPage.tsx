@@ -1,6 +1,6 @@
 import { useFetchProducts } from "@/hooks/productHooks";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import LoadingDisplay from "@/components/LoadingDisplay";
+import LoadingDisplay from "@/components/loadingDisplays";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductFeed } from "@/components/feed/productFeed";
 import { ProductTable } from "@/components/table/productTable";
