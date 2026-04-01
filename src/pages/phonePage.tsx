@@ -7,15 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useFetchPhones } from "@/hooks/phoneHooks";
 
 export const PhonePage = () => {
-  const { data: phones = [], isLoading, isError, error } = useFetchPhones();
-
-  if (isLoading) {
-    return <LoadingDisplay />;
-  }
-
-  if (isError) {
-    return <ErrorDisplay error={error} />;
-  }
+  const { data: phones = [], isLoading, error } = useFetchPhones();
 
   return (
     <div className="w-full max-w-none" aria-label="Phones Page" role="region">
@@ -31,23 +23,30 @@ export const PhonePage = () => {
           </div>
           <CreatePhoneDialog />
         </div>
-        {phones.length === 0 && (
-          <p className="text-sm text-zinc-500">No phones found</p>
-        )}
-        {phones.length > 0 && (
-          <div className="space-y-6">
-            <div className="block md:hidden">
-              <PhoneFeed phones={phones} />
-            </div>
 
-            <div className="hidden md:block">
-              <Card className="border border-zinc-200 shadow-sm">
-                <CardContent className="p-0">
-                  <PhoneTable phones={phones} />
-                </CardContent>
-              </Card>
+        {isLoading && <LoadingDisplay />}
+        {error && <ErrorDisplay error={error} />}
+
+        {!isLoading && !error && (
+          <>
+            {phones.length == 0 && (
+              <p className="text-sm text-zinc-500">No phones found</p>
+            )}
+
+            <div className="space-y-6">
+              <div className="block md:hidden">
+                <PhoneFeed phones={phones} />
+              </div>
+
+              <div className="hidden md:block">
+                <Card className="border border-zinc-200 shadow-sm">
+                  <CardContent className="p-0">
+                    <PhoneTable phones={phones} />
+                  </CardContent>
+                </Card>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>

@@ -12,9 +12,9 @@ import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Brain } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { phoneSchema, type PhoneSchemaType } from "@/schema/phoneSchema";
-import { useCreatePhones } from "@/hooks/phoneHooks";
+import { useState } from "react";
+import { useCreatePhone } from "@/hooks/phoneHooks";
 
 export const CreatePhoneDialog = () => {
   const [open, setOpen] = useState(false);
@@ -25,7 +25,7 @@ export const CreatePhoneDialog = () => {
     setError,
     reset,
     formState: { errors },
-  } = useForm<PhoneSchemaType>({
+  } = useForm({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
       Brand: "",
@@ -35,12 +35,9 @@ export const CreatePhoneDialog = () => {
     },
   });
 
-  const { mutate, isPending } = useCreatePhones(setError, setOpen, reset);
+  const { mutate, isPending } = useCreatePhone(setError, setOpen, reset);
 
-  const onSubmit = (data: PhoneSchemaType) => {
-    console.log("SUBMIT DATA:", data);
-    mutate(data);
-  };
+  const onSubmit = (data: PhoneSchemaType) => mutate(data);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -84,7 +81,7 @@ export const CreatePhoneDialog = () => {
             )}
           />
           <Input
-            type="text"
+            type="date"
             placeholder="Release Date"
             {...register("ReleaseDate")}
             className="w-full"

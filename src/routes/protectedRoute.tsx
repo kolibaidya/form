@@ -1,20 +1,16 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import PageLoader from "@/components/pageLoader";
-import { useEffect } from "react";
 
-export default function ProtectedRoute() {
-  const { isAuthenticated, isLoading, initializeAuth } = useAuthStore();
+export const ProtectedRoute = () => {
+  const { isAuthenticated, isLoading } = useAuthStore();
 
-  useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
-  if (isLoading) {
-    return <PageLoader />;
-  }
+  return (
+    <>
+      {isLoading && <PageLoader />}
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  return <Outlet />;
-}
+      {!isLoading &&
+        (isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />)}
+    </>
+  );
+};

@@ -21,16 +21,18 @@ export interface EditPhoneDialogProps {
   phone: Phone;
 }
 
-export function EditPhoneDialog({
+export const EditPhoneDialog = ({
   isOpen,
   handleClose,
   data,
-}: AsyncDialogProps<EditPhoneDialogProps, boolean>) {
-  const formKey = data?.phone?._id ?? "edit-phone";
-
-  const form = useForm<PhoneSchemaType>({
+}: AsyncDialogProps<EditPhoneDialogProps, boolean>) => {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(phoneSchema),
-
     defaultValues: {
       Brand: data?.phone?.Brand ?? "",
       Name: data?.phone?.Name ?? "",
@@ -39,78 +41,65 @@ export function EditPhoneDialog({
     },
   });
 
-  const editPhoneMutation = useEditPhone(form.setError, handleClose);
+  const { isPending, mutate } = useEditPhone(setError, handleClose);
 
-  const submitHandler = form.handleSubmit((formData) => {
+  const onSubmit = handleSubmit((formData: PhoneSchemaType) => {
     if (!data?.phone) return;
-
-    editPhoneMutation.mutate(
+    mutate(
       {
         id: data.phone._id,
         data: formData,
       },
       {
-        onSuccess: () => {
-          handleClose(true);
-        },
+        onSuccess: () => handleClose(true),
       },
     );
   });
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
-      <DialogContent key={formKey} className="w-[95vw] sm:max-w-md">
+      <DialogContent className="w-[95vw] sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">Edit Phone</DialogTitle>
           <DialogDescription className="text-sm">
             Update the phone information and save changes
           </DialogDescription>
         </DialogHeader>
-        <form
-          id="edit-phone-form"
-          onSubmit={submitHandler}
-          className="space-y-3"
-        >
+        <form id="edit-phone-form" onSubmit={onSubmit} className="space-y-3">
           <Input
-            {...form.register("Brand")}
+            {...register("Brand")}
             placeholder="Brand"
             className="w-full"
           />
           <ErrorMessage
-            errors={form.formState.errors}
+            errors={errors}
             name="Brand"
             render={({ message }) => (
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          <Input
-            {...form.register("Name")}
-            placeholder="Name"
-            className="w-full"
-          />
+          <Input {...register("Name")} placeholder="Name" className="w-full" />
           <ErrorMessage
-            errors={form.formState.errors}
+            errors={errors}
             name="Name"
             render={({ message }) => (
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
           <Input
-            {...form.register("ReleaseDate")}
-            placeholder="ReleaseDate"
+            {...register("ReleaseDate")}
+            placeholder="Release Date"
             className="w-full"
           />
           <ErrorMessage
-            errors={form.formState.errors}
+            errors={errors}
             name="ReleaseDate"
             render={({ message }) => (
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          {form.formState.errors.root && (
-            <p className="text-red-500 text-sm">
-              {form.formState.errors.root.message}{" "}
-            </p>
+          {errors.root && (
+            <p className="text-red-500 text-sm">{errors.root.message} </p>
           )}
         </form>
         <DialogFooter className="flex flex-col sm:flex-row gap-2">
@@ -124,13 +113,13 @@ export function EditPhoneDialog({
           <Button
             type="submit"
             form="edit-phone-form"
-            disabled={editPhoneMutation.isPending}
+            disabled={isPending}
             className="w-full sm:w-auto"
           >
-            {editPhoneMutation.isPending ? "Editing..." : " Save Changes"}
+            {isPending ? "Editing..." : "Save Changes"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-}
+};
