@@ -33,7 +33,7 @@ export const CreatePhoneDialog = () => {
     },
   });
 
-  const { mutate, isPending } = useCreatePhones(setError, setOpen, reset);
+  const { mutate, isPending } = useCreatePhone(setError, setOpen, reset);
 
   const onSubmit = (data: PhoneSchemaType) => {
     console.log("SUBMIT DATA:", data);
