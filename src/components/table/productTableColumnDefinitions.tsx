@@ -11,7 +11,7 @@ export const productTableColumnDefinitions = (): ColumnDef<Product>[] => [
       <div className="flex flex-col max-w-[400px]">
         <span
           className="front-medium text-zinc-900 truncate"
-          title="{row.original.title}"
+          title={row.original.title}
         >
           {row.original.title}
         </span>

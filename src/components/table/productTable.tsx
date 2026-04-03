@@ -20,13 +20,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { productTableColumnDefinitions } from "./productTableColumnDefinitions";
-import { CreateProductDialog } from "../dialogs/createProductDialog";
+import { CreateProductDialog } from "@/components/dialogs/createProductDialog";
 import { useDialog } from "react-dialog-async";
-import { DeleteProductDialog } from "../dialogs/deleteProductDialog";
-import { EditProductDialog } from "../dialogs/editProductDialog";
+import { DeleteProductDialog } from "@/components/dialogs/deleteProductDialog";
+import { EditProductDialog } from "@/components/dialogs/editProductDialog";
 import type { Product } from "@/models/product";
 import { Edit, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { productTableColumnDefinitions } from "@/components/table/productTableColumnDefinitions";
 
 interface ProductTableProps {
   products: Product[];
@@ -138,12 +138,7 @@ export const ProductTable = ({ products }: ProductTableProps) => {
                       onClick={() => {
                         editProductDialog.open({
                           id: row.original.id,
-                          product: {
-                            id: row.original.id,
-                            title: row.original.title,
-                            price: row.original.price,
-                            category: row.original.category,
-                          },
+                          product: row.original,
                         });
                       }}
                     >

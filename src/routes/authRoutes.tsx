@@ -1,9 +1,9 @@
-import DashboardLayout from "@/layouts/dashboardLayout";
+import { DashboardLayout } from "@/layouts/dashboardLayout";
 import LoginPage from "@/pages/loginPage";
 import RegisterPage from "@/pages/registerPage";
 import { Navigate, Route } from "react-router-dom";
 
-export default function AuthRoutes() {
+export const AuthRoutes = () => {
   return (
     <Route element={<DashboardLayout />}>
       <Route index element={<Navigate to="register" replace />} />
@@ -11,4 +11,4 @@ export default function AuthRoutes() {
       <Route path="register" element={<RegisterPage />} />
     </Route>
   );
-}
+};

@@ -22,7 +22,6 @@ export const CreateProductDialog = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm<ProductSchemaType>({
     resolver: zodResolver(ProductSchema),
@@ -33,14 +32,14 @@ export const CreateProductDialog = () => {
     },
   });
 
-  const { mutateAsync, isPending } = useCreateProducts(setError, setOpen);
-  const onSubmit = async (data: ProductSchemaType) => {
-    try {
-      await mutateAsync(data);
-    } catch (error) {
-      console.error(error);
-    }
+  const { isPending, mutate } = useCreateProducts();
+
+  const onSubmit = (data: ProductSchemaType) => {
+    mutate(data, {
+      onSuccess: () => setOpen(false),
+    });
   };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -101,6 +100,7 @@ export const CreateProductDialog = () => {
             <DialogClose asChild>
               <Button
                 variant="outline"
+                onClick={() => setOpen(false)}
                 className="w-full sm:w-auto cursor-pointer"
               >
                 Cancel

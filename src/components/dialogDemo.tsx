@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function DialogDemo() {
+export const DialogDemo = () => {
   return (
     <Dialog>
       <form>
@@ -47,4 +47,4 @@ export function DialogDemo() {
       </form>
     </Dialog>
   );
-}
+};

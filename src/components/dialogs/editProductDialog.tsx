@@ -22,32 +22,38 @@ export interface EditProductDialogProps {
   product: Product;
 }
 
-export function EditProductDialog({
+export const EditProductDialog = ({
   isOpen,
   handleClose,
   data: editProductDialogData,
-}: AsyncDialogProps<EditProductDialogProps, boolean>) {
+}: AsyncDialogProps<EditProductDialogProps, boolean>) => {
+  if (!editProductDialogData) return null;
+
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm<ProductSchemaType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       title: editProductDialogData.product.title,
-      price: Number(editProductDialogData.product.price),
+      price: editProductDialogData.product.price,
       category: editProductDialogData.product.category,
     },
   });
 
-  const { mutateAsync, isPending } = useEditProduct(setError);
+  const { isPending, mutate } = useEditProduct();
+  const onSubmit = (data: ProductSchemaType) => {
+    mutate(
+      { id: editProductDialogData.id, data },
+      {
+        onSuccess: () => handleClose(true),
+      },
+    );
+  };
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(isOpen) => !isOpen && handleClose(false)}
-    >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
       <DialogContent className="w-[95vw] sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">
@@ -57,12 +63,7 @@ export function EditProductDialog({
             Update the product inforation and save changes
           </DialogDescription>
         </DialogHeader>
-        <form
-          onSubmit={handleSubmit(async (data) => {
-            await mutateAsync({ id: editProductDialogData.id, data });
-          })}
-          className="space-y-3"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <Input
             type="text"
             placeholder="Title"
@@ -105,7 +106,11 @@ export function EditProductDialog({
           />
           <DialogFooter className="flex flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                onClick={() => handleClose(false)}
+                className="w-full sm:w-auto"
+              >
                 Cancel
               </Button>
             </DialogClose>
@@ -121,4 +126,4 @@ export function EditProductDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

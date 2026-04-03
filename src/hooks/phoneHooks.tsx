@@ -1,10 +1,11 @@
 import type { PhoneSchemaType } from "@/schema/phoneSchema";
 import type { Phone } from "@/models/phone";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { UseFormSetError } from "react-hook-form";
 
 const baseUrl = "http://localhost:3000/api/phones";
 
+export const useFetchPhones = () => {
+  return useQuery<Phone[]>({
 export const useFetchPhones = () => {
   return useQuery<Phone[]>({
     queryKey: ["phones"],
@@ -14,6 +15,7 @@ export const useFetchPhones = () => {
       return res.json();
     },
   });
+};
 };
 
 export const useCreatePhones = (
@@ -35,19 +37,11 @@ export const useCreatePhones = (
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["phones"] });
-      reset();
-      setOpen(false);
-    },
-    onError: (error: Error) => {
-      setError("root", { type: "server", message: error.message });
     },
   });
 };
 
-export const useEditPhone = (
-  setError: UseFormSetError<PhoneSchemaType>,
-  setOpen: (open: boolean) => void,
-) => {
+export const useEditPhone = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -61,14 +55,9 @@ export const useEditPhone = (
       return res.json();
     },
     onSuccess: () => {
-      setOpen(false);
       queryClient.invalidateQueries({
         queryKey: ["phones"],
       });
-    },
-
-    onError: (error: Error) => {
-      setError("root", { type: "server", message: error.message });
     },
   });
 };

@@ -1,5 +1,5 @@
 import type { Product } from "@/models/product";
-import ProductCard from "../card/productCard";
+import { ProductCard } from "@/components/card/productCard";
 
 interface ProductFeedProps {
   products: Product[];
@@ -12,10 +12,13 @@ export const ProductFeed = ({ products }: ProductFeedProps) => {
       role="list"
       aria-label="Product Feed"
     >
+      {products.length === 0 && (
+        <p className="text-sm text-center text-zinc-500 mt-6">
+          No products found.
+        </p>
+      )}
       {products.map((product) => (
-        <div key={product.id} role="listitem">
-          <ProductCard product={product} />
-        </div>
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );

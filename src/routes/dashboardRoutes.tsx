@@ -3,7 +3,7 @@ import { ProductPage } from "@/pages/productPage";
 import { Navigate, Route } from "react-router-dom";
 import ProtectedRoute from "./protectedRoute";
 
-export default function DashboardRoutes() {
+export const DashboardRoutes = () => {
   return (
     <Route path="dashboard" element={<ProtectedRoute />}>
       <Route index element={<Navigate to="products" replace />} />
@@ -11,4 +11,4 @@ export default function DashboardRoutes() {
       <Route path="phones" element={<PhonePage />} />
     </Route>
   );
-}
+};

@@ -1,7 +1,7 @@
 import { CreatePhoneDialog } from "@/components/dialogs/CreatePhoneDialog";
-import ErrorDisplay from "@/components/ErrorDisplay";
+import { ErrorDisplay } from "@/components/ErrorDisplay";
 import { PhoneFeed } from "@/components/feed/phoneFeed";
-import LoadingDisplay from "@/components/loadingDisplay";
+import { LoadingDisplay } from "@/components/loadingDisplay";
 import { PhoneTable } from "@/components/table/phoneTable";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFetchPhones } from "@/hooks/phoneHooks";

@@ -1,9 +1,9 @@
-import AppSidebar from "@/components/appSidebar";
+import { AppSidebar } from "@/components/appSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
-export default function MainLayout() {
+export const MainLayout = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-zinc-50">
@@ -24,4 +24,4 @@ export default function MainLayout() {
       </div>
     </SidebarProvider>
   );
-}
+};

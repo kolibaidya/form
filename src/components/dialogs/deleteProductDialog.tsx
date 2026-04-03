@@ -5,8 +5,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useDeleteProduct } from "@/hooks/productHooks";
 
 interface DeleteProductDialogProps {
@@ -20,10 +20,7 @@ export const DeleteProductDialog = ({
 }: AsyncDialogProps<DeleteProductDialogProps, boolean>) => {
   const { mutateAsync } = useDeleteProduct();
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(isOpen) => !isOpen && handleClose(false)}
-    >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
       <DialogContent className="w-[90vw] sm:max-w-sm">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">

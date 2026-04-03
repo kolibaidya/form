@@ -5,18 +5,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import type { Product } from "@/models/product";
 import { useDialog } from "react-dialog-async";
-import { EditProductDialog } from "../dialogs/editProductDialog";
-import { DeleteProductDialog } from "../dialogs/deleteProductDialog";
+import { EditProductDialog } from "@/components/dialogs/editProductDialog";
+import { DeleteProductDialog } from "@/components/dialogs/deleteProductDialog";
 import { Edit, Trash2 } from "lucide-react";
 
 interface productCardProps {
   product: Product;
 }
 
-export default function ProductCard({ product }: productCardProps) {
+export const ProductCard = ({ product }: productCardProps) => {
   const editProductDialog = useDialog(EditProductDialog);
   const deleteProductDialog = useDialog(DeleteProductDialog);
 
@@ -77,4 +77,4 @@ export default function ProductCard({ product }: productCardProps) {
       </CardContent>
     </Card>
   );
-}
+};

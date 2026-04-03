@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import MainLayout from "@/layouts/mainLayout";
-import DashboardLayout from "@/layouts/dashboardLayout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "@/pages/loginPage";
 import RegisterPage from "@/pages/registerPage";
 import ProtectedRoute from "./routes/protectedRoute";
@@ -8,6 +7,8 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import { lazy, Suspense } from "react";
 import PageLoader from "./components/pageLoader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MainLayout } from "@/layouts/mainLayout";
+import { DashboardLayout } from "@/layouts/dashboardLayout";
 
 const queryClient = new QueryClient();
 

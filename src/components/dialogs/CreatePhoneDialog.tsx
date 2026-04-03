@@ -22,8 +22,6 @@ export const CreatePhoneDialog = () => {
   const {
     register,
     handleSubmit,
-    setError,
-    reset,
     formState: { errors },
   } = useForm<PhoneSchemaType>({
     resolver: zodResolver(phoneSchema),

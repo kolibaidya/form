@@ -1,10 +1,10 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/appSidebar";
 import { Outlet } from "react-router-dom";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { AppSidebar } from "@/components/appSidebar";
 
-export default function DashboardLayout() {
+export const DashboardLayout = () => {
   return (
     <div className="flex min-h-screen w-full bg-zinc-50">
       <AppSidebar />
@@ -23,4 +23,4 @@ export default function DashboardLayout() {
       </div>
     </div>
   );
-}
+};

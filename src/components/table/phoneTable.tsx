@@ -23,8 +23,8 @@ import { useState } from "react";
 import { useDialog } from "react-dialog-async";
 import { Edit, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Phone } from "@/models/phone";
-import { EditPhoneDialog } from "../dialogs/EditPhoneDialog";
-import { DeletePhoneDialog } from "../dialogs/DeletePhoneDialog";
+import { EditPhoneDialog } from "@/components/dialogs/EditPhoneDialog";
+import { DeletePhoneDialog } from "@/components/dialogs/DeletePhoneDialog";
 
 const phoneTableColumnDefinitions = () => [
   { header: "Brand", accessorKey: "Brand" },

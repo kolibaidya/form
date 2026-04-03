@@ -25,9 +25,7 @@ export function EditPhoneDialog({
   isOpen,
   handleClose,
   data,
-}: AsyncDialogProps<EditPhoneDialogProps, boolean>) {
-  const formKey = data?.phone?._id ?? "edit-phone";
-
+}: AsyncDialogProps<EditPhoneDialogProps, boolean>) => {
   const form = useForm<PhoneSchemaType>({
     resolver: zodResolver(phoneSchema),
 
@@ -39,12 +37,17 @@ export function EditPhoneDialog({
     },
   });
 
-  const editPhoneMutation = useEditPhone(form.setError, handleClose);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
-  const submitHandler = form.handleSubmit((formData) => {
-    if (!data?.phone) return;
+  const { isPending, mutate } = useEditPhone();
 
-    editPhoneMutation.mutate(
+  const onSubmit = handleSubmit((formData) => {
+    if (!data?.phone?._id) return;
+    mutate(
       {
         id: data.phone._id,
         data: formData,
