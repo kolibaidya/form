@@ -5,12 +5,9 @@ import PageLoader from "@/components/pageLoader";
 export const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuthStore();
 
-  return (
-    <>
-      {isLoading && <PageLoader />}
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
-      {!isLoading &&
-        (isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />)}
-    </>
-  );
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };

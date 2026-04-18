@@ -31,30 +31,26 @@ export const EditPhoneDialog = ({
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({
+  } = useForm<PhoneSchemaType>({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
       Brand: data?.phone?.Brand ?? "",
       Name: data?.phone?.Name ?? "",
       ReleaseDate: data?.phone?.ReleaseDate ?? "",
-      root: null,
     },
   });
 
-  const { isPending, mutate } = useEditPhone(setError, handleClose);
+  const { isPending, mutateAsync } = useEditPhone(setError, handleClose);
 
-  const onSubmit = handleSubmit((formData: PhoneSchemaType) => {
-    if (!data?.phone) return;
-    mutate(
-      {
-        id: data.phone._id,
-        data: formData,
-      },
-      {
-        onSuccess: () => handleClose(true),
-      },
-    );
-  });
+  const onSubmit = async (formData: PhoneSchemaType) => {
+    if (!data?.phone?._id) return;
+    await mutateAsync({
+      id: data.phone._id,
+      data: formData,
+    });
+
+    handleClose(true);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
@@ -65,7 +61,7 @@ export const EditPhoneDialog = ({
             Update the phone information and save changes
           </DialogDescription>
         </DialogHeader>
-        <form id="edit-phone-form" onSubmit={onSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <Input
             {...register("Brand")}
             placeholder="Brand"
@@ -86,11 +82,7 @@ export const EditPhoneDialog = ({
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          <Input
-            {...register("ReleaseDate")}
-            placeholder="Release Date"
-            className="w-full"
-          />
+          <Input type="date" {...register("ReleaseDate")} className="w-full" />
           <ErrorMessage
             errors={errors}
             name="ReleaseDate"
@@ -101,24 +93,25 @@ export const EditPhoneDialog = ({
           {errors.root && (
             <p className="text-red-500 text-sm">{errors.root.message} </p>
           )}
+
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleClose(false)}
+              className="w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+            >
+              {isPending ? "Editing..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
         </form>
-        <DialogFooter className="flex flex-col sm:flex-row gap-2">
-          <Button
-            variant="outline"
-            onClick={() => handleClose(false)}
-            className="w-full sm:w-auto"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="edit-phone-form"
-            disabled={isPending}
-            className="w-full sm:w-auto"
-          >
-            {isPending ? "Editing..." : "Save Changes"}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -18,14 +18,12 @@ export const DeletePhoneDialog = ({
   handleClose,
   data,
 }: AsyncDialogProps<DeletePhoneDialogProps, boolean>) => {
-  const { isPending, mutate } = useDeletePhone();
-
-  const handleDelete = () => {
+  const { isPending, mutateAsync } = useDeletePhone();
+  const handleDelete = async () => {
     if (!data?._id) return;
 
-    mutate(data._id, {
-      onSuccess: () => handleClose(true),
-    });
+    await mutateAsync(data._id);
+    handleClose(true);
   };
 
   return (

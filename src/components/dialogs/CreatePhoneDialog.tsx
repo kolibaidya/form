@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -25,19 +24,20 @@ export const CreatePhoneDialog = () => {
     setError,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<PhoneSchemaType>({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
       Brand: "",
       Name: "",
       ReleaseDate: "",
-      root: null,
     },
   });
 
-  const { mutate, isPending } = useCreatePhone(setError, setOpen, reset);
+  const { mutateAsync, isPending } = useCreatePhone(setError, setOpen, reset);
 
-  const onSubmit = (data: PhoneSchemaType) => mutate(data);
+  const onSubmit = async (data: PhoneSchemaType) => {
+    await mutateAsync(data);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -55,7 +55,6 @@ export const CreatePhoneDialog = () => {
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <Input
-            type="text"
             placeholder="Brand"
             {...register("Brand")}
             className="w-full"
@@ -67,12 +66,7 @@ export const CreatePhoneDialog = () => {
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          <Input
-            type="text"
-            placeholder="Name"
-            {...register("Name")}
-            className="w-full"
-          />
+          <Input placeholder="Name" {...register("Name")} className="w-full" />
           <ErrorMessage
             errors={errors}
             name="Name"
@@ -80,12 +74,7 @@ export const CreatePhoneDialog = () => {
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          <Input
-            type="date"
-            placeholder="Release Date"
-            {...register("ReleaseDate")}
-            className="w-full"
-          />
+          <Input type="date" {...register("ReleaseDate")} className="w-full" />
           <ErrorMessage
             errors={errors}
             name="ReleaseDate"
@@ -98,15 +87,15 @@ export const CreatePhoneDialog = () => {
           )}
 
           <div className="flex flex-col sm:flex-row gap-2">
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full sm:w-auto cursor-pointer"
-              >
-                Cancel
-              </Button>
-            </DialogClose>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              className="w-full sm:w-auto cursor-pointer"
+            >
+              Cancel
+            </Button>
+
             <Button
               type="submit"
               disabled={isPending}

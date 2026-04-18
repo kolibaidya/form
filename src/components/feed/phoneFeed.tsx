@@ -1,12 +1,13 @@
 import type { Phone } from "@/models/phone";
 import { PhoneCard } from "@/components/card/phoneCard";
+import { Container } from "@/components/container/container";
 
 interface PhoneFeedProps {
   phones: Phone[];
 }
 
 export const PhoneFeed = ({ phones }: PhoneFeedProps) => (
-  <>
+  <Container>
     {phones.length === 0 && (
       <p className="text-sm text-center text-gray-500">No phones available.</p>
     )}
@@ -15,5 +16,5 @@ export const PhoneFeed = ({ phones }: PhoneFeedProps) => (
         <PhoneCard key={phone._id} phone={phone} />
       ))}
     </div>
-  </>
+  </Container>
 );
