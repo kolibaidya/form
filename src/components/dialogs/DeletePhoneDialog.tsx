@@ -5,8 +5,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useDeletePhone } from "@/hooks/phoneHooks";
 
 interface DeletePhoneDialogProps {
@@ -18,25 +18,18 @@ export const DeletePhoneDialog = ({
   handleClose,
   data,
 }: AsyncDialogProps<DeletePhoneDialogProps, boolean>) => {
-  const deletePhoneMutation = useDeletePhone();
+  const { isPending, mutateAsync } = useDeletePhone();
+  const handleDelete = async () => {
+    if (!data?._id) return;
 
-  const handleDelete = () => {
-    deletePhoneMutation.mutate(data._id, {
-      onSuccess: () => {
-        handleClose(true);
-      },
-      onError: (error) => {
-        console.error("Delete failed", error);
-      },
-    });
+    await mutateAsync(data._id);
+    handleClose(true);
   };
 
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) handleClose(false);
-      }}
+      onOpenChange={(isOpen) => !isOpen && handleClose(false)}
     >
       <DialogContent className="w-[90vw] sm:max-w-sm">
         <DialogHeader>
@@ -49,13 +42,19 @@ export const DeletePhoneDialog = ({
         </p>
         <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
           <Button
-            variant="destructive"
-            className="w-full"
-            onClick={handleDelete}
-            disabled={deletePhoneMutation.isPending}
+            variant="outline"
+            onClick={() => handleClose(false)}
+            className="w-full sm:w-auto"
           >
-            Delete Phone
-            {deletePhoneMutation.isPending ? "Deleting..." : "Delete phone"}
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isPending}
+            className="w-full sm:w-auto"
+          >
+            {isPending ? "Deleting..." : "Delete phone"}
           </Button>
         </DialogFooter>
       </DialogContent>

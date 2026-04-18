@@ -23,14 +23,10 @@ import { useState } from "react";
 import { useDialog } from "react-dialog-async";
 import { Edit, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Phone } from "@/models/phone";
-import { EditPhoneDialog } from "../dialogs/EditPhoneDialog";
-import { DeletePhoneDialog } from "../dialogs/DeletePhoneDialog";
+import { EditPhoneDialog } from "@/components/dialogs/EditPhoneDialog";
+import { DeletePhoneDialog } from "@/components/dialogs/DeletePhoneDialog";
+import { phoneTableColumnDefinitions } from "@/components/table/phoneTableColumnDefinitions";
 
-const phoneTableColumnDefinitions = () => [
-  { header: "Brand", accessorKey: "Brand" },
-  { header: "Name", accessorKey: "Name" },
-  { header: "Release Date", accessorKey: "ReleaseDate" },
-];
 interface PhoneTableProps {
   phones: Phone[];
 }
@@ -40,12 +36,13 @@ export const PhoneTable = ({ phones }: PhoneTableProps) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+
   const editPhoneDialog = useDialog(EditPhoneDialog);
   const deletePhoneDialog = useDialog(DeletePhoneDialog);
 
   const table = useReactTable<Phone>({
     data: phones,
-    columns: phoneTableColumnDefinitions(),
+    columns: phoneTableColumnDefinitions,
     autoResetAll: true,
     state: {
       sorting,
@@ -86,21 +83,19 @@ export const PhoneTable = ({ phones }: PhoneTableProps) => {
                 key={headerGroup.id}
                 className="border-b border-zinc-200 hover:bg-transparent"
               >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="h-12 px-4 text-left text-xs font-semibold text-zinc-600 uppercase tracking-wider bg-zinc-50/50"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="h-12 px-4 text-left text-xs font-semibold text-zinc-600 uppercase tracking-wider bg-zinc-50/50"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
                 <TableHead className="h-12 px-4 text-right text-xs font-semibold text-zinc-600 uppercase tracking-wider bg-zinc-50/50">
                   Actions
                 </TableHead>
@@ -111,7 +106,7 @@ export const PhoneTable = ({ phones }: PhoneTableProps) => {
             {table.getRowModel().rows.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={phoneTableColumnDefinitions().length + 1}
+                  colSpan={phoneTableColumnDefinitions.length + 1}
                   className="h-32 text-center text-zinc-500"
                 >
                   No phones found.
@@ -165,7 +160,6 @@ export const PhoneTable = ({ phones }: PhoneTableProps) => {
                 </TableCell>
               </TableRow>
             ))}
-            ;
           </TableBody>
         </Table>
       </div>

@@ -5,18 +5,18 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useDialog } from "react-dialog-async";
 import { Edit, Trash2 } from "lucide-react";
-import { DeletePhoneDialog } from "../dialogs/DeletePhoneDialog";
-import { EditPhoneDialog } from "../dialogs/EditPhoneDialog";
+import { DeletePhoneDialog } from "@/components/dialogs/DeletePhoneDialog";
+import { EditPhoneDialog } from "@/components/dialogs/EditPhoneDialog";
 import type { Phone } from "@/models/phone";
 
 interface PhoneCardProps {
   phone: Phone;
 }
 
-export default function PhoneCard({ phone }: PhoneCardProps) {
+export const PhoneCard = ({ phone }: PhoneCardProps) => {
   const editPhoneDialog = useDialog(EditPhoneDialog);
   const deletePhoneDialog = useDialog(DeletePhoneDialog);
 
@@ -75,4 +75,4 @@ export default function PhoneCard({ phone }: PhoneCardProps) {
       </CardContent>
     </Card>
   );
-}
+};

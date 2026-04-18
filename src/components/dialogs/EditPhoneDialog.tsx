@@ -21,116 +21,98 @@ export interface EditPhoneDialogProps {
   phone: Phone;
 }
 
-export function EditPhoneDialog({
+export const EditPhoneDialog = ({
   isOpen,
   handleClose,
   data,
-}: AsyncDialogProps<EditPhoneDialogProps, boolean>) {
-  const formKey = data?.phone?._id ?? "edit-phone";
-
-  const form = useForm<PhoneSchemaType>({
+}: AsyncDialogProps<EditPhoneDialogProps, boolean>) => {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<PhoneSchemaType>({
     resolver: zodResolver(phoneSchema),
-
     defaultValues: {
       Brand: data?.phone?.Brand ?? "",
       Name: data?.phone?.Name ?? "",
       ReleaseDate: data?.phone?.ReleaseDate ?? "",
-      root: null,
     },
   });
 
-  const editPhoneMutation = useEditPhone(form.setError, handleClose);
+  const { isPending, mutateAsync } = useEditPhone(setError, handleClose);
 
-  const submitHandler = form.handleSubmit((formData) => {
-    if (!data?.phone) return;
+  const onSubmit = async (formData: PhoneSchemaType) => {
+    if (!data?.phone?._id) return;
+    await mutateAsync({
+      id: data.phone._id,
+      data: formData,
+    });
 
-    editPhoneMutation.mutate(
-      {
-        id: data.phone._id,
-        data: formData,
-      },
-      {
-        onSuccess: () => {
-          handleClose(true);
-        },
-      },
-    );
-  });
+    handleClose(true);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
-      <DialogContent key={formKey} className="w-[95vw] sm:max-w-md">
+      <DialogContent className="w-[95vw] sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-base sm:text-lg">Edit Phone</DialogTitle>
           <DialogDescription className="text-sm">
             Update the phone information and save changes
           </DialogDescription>
         </DialogHeader>
-        <form
-          id="edit-phone-form"
-          onSubmit={submitHandler}
-          className="space-y-3"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <Input
-            {...form.register("Brand")}
+            {...register("Brand")}
             placeholder="Brand"
             className="w-full"
           />
           <ErrorMessage
-            errors={form.formState.errors}
+            errors={errors}
             name="Brand"
             render={({ message }) => (
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          <Input
-            {...form.register("Name")}
-            placeholder="Name"
-            className="w-full"
-          />
+          <Input {...register("Name")} placeholder="Name" className="w-full" />
           <ErrorMessage
-            errors={form.formState.errors}
+            errors={errors}
             name="Name"
             render={({ message }) => (
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          <Input
-            {...form.register("ReleaseDate")}
-            placeholder="ReleaseDate"
-            className="w-full"
-          />
+          <Input type="date" {...register("ReleaseDate")} className="w-full" />
           <ErrorMessage
-            errors={form.formState.errors}
+            errors={errors}
             name="ReleaseDate"
             render={({ message }) => (
               <p className="text-red-500 text-sm">{message}</p>
             )}
           />
-          {form.formState.errors.root && (
-            <p className="text-red-500 text-sm">
-              {form.formState.errors.root.message}{" "}
-            </p>
+          {errors.root && (
+            <p className="text-red-500 text-sm">{errors.root.message} </p>
           )}
+
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleClose(false)}
+              className="w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto"
+            >
+              {isPending ? "Editing..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
         </form>
-        <DialogFooter className="flex flex-col sm:flex-row gap-2">
-          <Button
-            variant="outline"
-            onClick={() => handleClose(false)}
-            className="w-full sm:w-auto"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="edit-phone-form"
-            disabled={editPhoneMutation.isPending}
-            className="w-full sm:w-auto"
-          >
-            {editPhoneMutation.isPending ? "Editing..." : " Save Changes"}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-}
+};

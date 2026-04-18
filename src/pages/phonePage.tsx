@@ -7,15 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useFetchPhones } from "@/hooks/phoneHooks";
 
 export const PhonePage = () => {
-  const { data: phones = [], isLoading, isError, error } = useFetchPhones();
-
-  if (isLoading) {
-    return <LoadingDisplay />;
-  }
-
-  if (isError) {
-    return <ErrorDisplay error={error} />;
-  }
+  const { data: phones = [], isLoading, error } = useFetchPhones();
 
   return (
     <div className="w-full max-w-none" aria-label="Phones Page" role="region">
@@ -31,11 +23,16 @@ export const PhonePage = () => {
           </div>
           <CreatePhoneDialog />
         </div>
-        {phones.length === 0 && (
-          <p className="text-sm text-zinc-500">No phones found</p>
-        )}
-        {phones.length > 0 && (
+
+        {isLoading && <LoadingDisplay />}
+        {error && <ErrorDisplay error={error} />}
+
+        {!isLoading && !error && (
           <div className="space-y-6">
+            {phones.length === 0 && (
+              <p className="text-sm text-zinc-500">No phones found</p>
+            )}
+
             <div className="block md:hidden">
               <PhoneFeed phones={phones} />
             </div>

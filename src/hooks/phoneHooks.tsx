@@ -5,8 +5,8 @@ import type { UseFormSetError } from "react-hook-form";
 
 const baseUrl = "http://localhost:3000/api/phones";
 
-export const useFetchPhones = () => {
-  return useQuery<Phone[]>({
+export const useFetchPhones = () =>
+  useQuery<Phone[], Error>({
     queryKey: ["phones"],
     queryFn: async () => {
       const res = await fetch(baseUrl);
@@ -14,9 +14,8 @@ export const useFetchPhones = () => {
       return res.json();
     },
   });
-};
 
-export const useCreatePhones = (
+export const useCreatePhone = (
   setError: UseFormSetError<PhoneSchemaType>,
   setOpen: (open: boolean) => void,
   reset: () => void,
@@ -24,11 +23,11 @@ export const useCreatePhones = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payLoad: PhoneSchemaType) => {
+    mutationFn: async (payload: PhoneSchemaType) => {
       const res = await fetch(baseUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payLoad),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed to create phone");
       return res.json();

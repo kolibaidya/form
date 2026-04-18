@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "./index.css";
+import "@/index.css";
 import { DialogOutlet, DialogProvider } from "react-dialog-async";
+import { App } from "@/App";
 
 const queryClient = new QueryClient();
 
@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <DialogOutlet />
       </DialogProvider>
     </QueryClientProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
