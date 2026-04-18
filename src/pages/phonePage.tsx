@@ -1,11 +1,13 @@
 import { CreatePhoneDialog } from "@/components/dialogs/CreatePhoneDialog";
+import ErrorDisplay from "@/components/ErrorDisplay";
 import { PhoneFeed } from "@/components/feed/phoneFeed";
+import LoadingDisplay from "@/components/loadingDisplay";
 import { PhoneTable } from "@/components/table/phoneTable";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFetchPhones } from "@/hooks/phoneHooks";
 
 export const PhonePage = () => {
-  const { data: phones = [] } = useFetchPhones();
+  const { data: phones = [], isLoading, error } = useFetchPhones();
 
   return (
     <div className="w-full max-w-none" aria-label="Phones Page" role="region">
@@ -22,23 +24,28 @@ export const PhonePage = () => {
           <CreatePhoneDialog />
         </div>
 
-        <div className="space-y-6">
-          {phones.length === 0 && (
-            <p className="text-sm text-zinc-500">No phones found</p>
-          )}
+        {isLoading && <LoadingDisplay />}
+        {error && <ErrorDisplay error={error} />}
 
-          <div className="block md:hidden">
-            <PhoneFeed phones={phones} />
-          </div>
+        {!isLoading && !error && (
+          <div className="space-y-6">
+            {phones.length === 0 && (
+              <p className="text-sm text-zinc-500">No phones found</p>
+            )}
 
-          <div className="hidden md:block">
-            <Card className="border border-zinc-200 shadow-sm">
-              <CardContent className="p-0">
-                <PhoneTable phones={phones} />
-              </CardContent>
-            </Card>
+            <div className="block md:hidden">
+              <PhoneFeed phones={phones} />
+            </div>
+
+            <div className="hidden md:block">
+              <Card className="border border-zinc-200 shadow-sm">
+                <CardContent className="p-0">
+                  <PhoneTable phones={phones} />
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

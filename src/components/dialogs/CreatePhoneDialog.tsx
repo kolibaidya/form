@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -87,14 +88,15 @@ export const CreatePhoneDialog = () => {
           )}
 
           <div className="flex flex-col sm:flex-row gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              className="w-full sm:w-auto cursor-pointer"
-            >
-              Cancel
-            </Button>
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto cursor-pointer"
+              >
+                Cancel
+              </Button>
+            </DialogClose>
 
             <Button
               type="submit"
